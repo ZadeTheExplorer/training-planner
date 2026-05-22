@@ -3687,6 +3687,22 @@ function bindModalEvents(){
   });
   document.getElementById('vmodal-save').addEventListener('click',saveVideoForCurrentExercise);
   document.getElementById('vmodal-clear').addEventListener('click',clearVideoForCurrentExercise);
+  // Robust "Open on YouTube" — build URL fresh from current state on every click
+  document.getElementById('vmodal-open-yt').addEventListener('click',e=>{
+    e.preventDefault();
+    const id = currentVKey ? VIDEOS[currentVKey] : null;
+    if(!id){
+      showToast('Không có video để mở');
+      return;
+    }
+    const url = 'https://www.youtube.com/watch?v=' + id;
+    const w = window.open(url,'_blank','noopener,noreferrer');
+    if(!w){
+      // Popup blocked — copy URL as fallback
+      navigator.clipboard && navigator.clipboard.writeText(url);
+      showToast('Popup bị chặn — link đã copy vào clipboard');
+    }
+  });
   const input = document.getElementById('vmodal-input');
   input.addEventListener('input',()=>{
     document.getElementById('vmodal-save').disabled = !parseYouTubeId(input.value.trim());
