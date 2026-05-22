@@ -909,6 +909,281 @@ footer.page-footer .src{
   color:var(--text-3);
 }
 
+/* ===== VIDEO DEMO BUTTON ===== */
+.ex-demo{
+  flex-shrink:0;
+  width:30px;height:30px;
+  margin-left:auto;
+  margin-top:-4px;
+  display:flex;
+  align-items:center;justify-content:center;
+  border-radius:8px;
+  color:var(--text-3);
+  background:transparent;
+  border:1px solid transparent;
+  opacity:0;
+  transform:translateX(-4px);
+  transition:opacity .15s,transform .15s,background .15s,color .15s,border-color .15s;
+  cursor:pointer;
+}
+.ex-demo svg{width:13px;height:13px}
+.ex:hover .ex-demo,.ex-demo:focus-visible{
+  opacity:1;
+  transform:translateX(0);
+}
+.ex-demo:hover{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:var(--accent-bright);
+}
+.ex-demo{position:relative}
+.ex-demo.has-video{
+  color:var(--accent);
+  opacity:.85;
+  transform:translateX(0);
+}
+.ex-demo.has-video::after{
+  content:"";
+  position:absolute;
+  top:4px;right:4px;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 6px var(--accent),0 0 1px #0a0a0b;
+}
+
+/* ===== VIDEO MODAL ===== */
+.vmodal{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.vmodal.open{display:flex;animation:vmodal-fade .2s ease}
+@keyframes vmodal-fade{from{opacity:0}to{opacity:1}}
+.vmodal-backdrop{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.vmodal-card{
+  position:relative;
+  width:100%;
+  max-width:780px;
+  max-height:90vh;
+  background:var(--bg-1);
+  border:1px solid var(--border-strong);
+  border-radius:var(--radius-l);
+  box-shadow:var(--shadow-lg);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  animation:vmodal-pop .25s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes vmodal-pop{from{transform:translateY(20px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.vmodal-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:18px 22px;
+  border-bottom:1px solid var(--border);
+}
+.vmodal-eyebrow{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent-bright);
+}
+.vmodal-title{
+  font-size:17px;
+  font-weight:700;
+  color:var(--text);
+  margin-top:2px;
+  line-height:1.3;
+}
+.vmodal-header-text{flex:1;min-width:0}
+.vmodal-close{
+  flex-shrink:0;
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:8px;
+  color:var(--text-2);
+  transition:all .15s;
+}
+.vmodal-close:hover{background:var(--bg-3);color:var(--text)}
+.vmodal-close svg{width:18px;height:18px}
+.vmodal-body{
+  flex:1;
+  overflow-y:auto;
+  padding:20px 22px 22px;
+}
+.vmodal-player{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  background:#000;
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:16px;
+}
+.vmodal-player iframe{
+  position:absolute;
+  inset:0;
+  width:100%;height:100%;
+  border:0;
+}
+.vmodal-empty{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  background:linear-gradient(135deg,var(--bg-2),var(--bg-3));
+  padding:24px;
+  text-align:center;
+}
+.vmodal-empty-icon{
+  width:56px;height:56px;
+  border-radius:50%;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--accent-bright);
+}
+.vmodal-empty-icon svg{width:26px;height:26px}
+.vmodal-empty-text{font-size:14px;color:var(--text-2);max-width:380px}
+.vmodal-search-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:11px 20px;
+  background:var(--accent);
+  color:#0a0a0b;
+  border-radius:10px;
+  font-weight:700;
+  font-size:14px;
+  transition:transform .15s,filter .15s;
+}
+.vmodal-search-btn:hover{filter:brightness(1.08);transform:translateY(-1px);text-decoration:none}
+.vmodal-search-btn svg{width:14px;height:14px}
+.vmodal-paste{
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px 18px;
+}
+.vmodal-paste-label{
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-2);
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.vmodal-paste-label svg{width:13px;height:13px;color:var(--accent-bright)}
+.vmodal-paste-row{
+  display:flex;
+  gap:8px;
+}
+.vmodal-paste-row input{
+  flex:1;
+  min-width:0;
+  padding:10px 14px;
+  background:var(--bg);
+  border:1px solid var(--border-strong);
+  border-radius:8px;
+  color:var(--text);
+  font-size:13px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  transition:border-color .15s;
+}
+.vmodal-paste-row input:focus{
+  outline:none;
+  border-color:var(--accent);
+}
+.vmodal-paste-row button{
+  padding:10px 18px;
+  background:var(--accent);
+  color:#0a0a0b;
+  border-radius:8px;
+  font-weight:700;
+  font-size:13px;
+  transition:filter .15s;
+}
+.vmodal-paste-row button:hover{filter:brightness(1.08)}
+.vmodal-paste-row button:disabled{opacity:.5;cursor:not-allowed;filter:none}
+.vmodal-hint{
+  font-size:11px;
+  color:var(--text-3);
+  margin-top:8px;
+  line-height:1.5;
+}
+.vmodal-hint code{
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  background:var(--bg-3);
+  padding:1px 5px;
+  border-radius:3px;
+  font-size:10px;
+  color:var(--text-2);
+}
+.vmodal-saved-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 14px;
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  border-radius:10px;
+  margin-bottom:14px;
+  font-size:12px;
+  color:var(--accent-bright);
+}
+.vmodal-saved-bar-text{display:flex;align-items:center;gap:8px}
+.vmodal-saved-bar-text svg{width:13px;height:13px}
+.vmodal-saved-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-shrink:0;
+}
+.vmodal-open-yt{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size:11px;
+  font-weight:600;
+  color:var(--accent-bright);
+  padding:5px 10px;
+  border:1px solid var(--accent);
+  border-radius:6px;
+  background:rgba(0,0,0,.2);
+  transition:all .15s;
+  white-space:nowrap;
+}
+.vmodal-open-yt:hover{
+  background:var(--accent);
+  color:#0a0a0b;
+  text-decoration:none;
+}
+.vmodal-open-yt svg{width:11px;height:11px}
+.vmodal-clear{
+  color:var(--text-2);
+  font-size:11px;
+  padding:5px 10px;
+  border-radius:6px;
+  border:1px solid transparent;
+  transition:all .15s;
+}
+.vmodal-clear:hover{background:rgba(255,255,255,.06);color:var(--text);border-color:var(--border-strong)}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width:780px){
   .hero{padding:64px 16px 40px}
@@ -930,6 +1205,11 @@ footer.page-footer .src{
   .fab-bar{bottom:16px;right:16px}
   .fab{padding:10px 14px;font-size:12px}
   .fab .fab-label-long{display:none}
+  .ex-demo{opacity:.6;transform:translateX(0)}
+  .vmodal{padding:0}
+  .vmodal-card{max-height:100vh;height:100%;border-radius:0}
+  .vmodal-header{padding:14px 16px}
+  .vmodal-body{padding:14px 16px 18px}
 }
 @media (max-width:480px){
   .hero h1{font-size:48px}
@@ -2781,6 +3061,60 @@ footer.page-footer .src{
 
 <div class="toast" id="toast"></div>
 
+<!-- ============ VIDEO MODAL ============ -->
+<div class="vmodal" id="vmodal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="vmodal-title">
+  <div class="vmodal-backdrop" data-vclose="1"></div>
+  <div class="vmodal-card">
+    <div class="vmodal-header">
+      <div class="vmodal-header-text">
+        <div class="vmodal-eyebrow">Demo bài tập</div>
+        <div class="vmodal-title" id="vmodal-title">—</div>
+      </div>
+      <button class="vmodal-close" data-vclose="1" aria-label="Đóng">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="vmodal-body">
+      <div class="vmodal-saved-bar" id="vmodal-saved-bar" hidden>
+        <span class="vmodal-saved-bar-text">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+          <span>Video đã lưu</span>
+        </span>
+        <div class="vmodal-saved-actions">
+          <a id="vmodal-open-yt" class="vmodal-open-yt" href="#" target="_blank" rel="noopener" title="Mở trên YouTube nếu video không phát ở đây">
+            <span>Mở YouTube</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg>
+          </a>
+          <button class="vmodal-clear" id="vmodal-clear" type="button">Xóa</button>
+        </div>
+      </div>
+      <div class="vmodal-player" id="vmodal-player">
+        <div class="vmodal-empty" id="vmodal-empty">
+          <div class="vmodal-empty-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
+          </div>
+          <div class="vmodal-empty-text">Chưa có video nào được lưu. Tìm trên YouTube hoặc paste link bên dưới để lưu video của bạn.</div>
+          <a id="vmodal-search-btn" class="vmodal-search-btn" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <span>Tìm trên YouTube</span>
+          </a>
+        </div>
+      </div>
+      <div class="vmodal-paste">
+        <div class="vmodal-paste-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-4"/><path d="M9 2h6v4H9z"/></svg>
+          <span>Lưu video cho lần sau</span>
+        </div>
+        <div class="vmodal-paste-row">
+          <input type="text" id="vmodal-input" placeholder="https://www.youtube.com/watch?v=...">
+          <button id="vmodal-save" type="button" disabled>Lưu</button>
+        </div>
+        <div class="vmodal-hint">Hỗ trợ <code>youtube.com/watch?v=...</code>, <code>youtu.be/...</code>, hoặc <code>youtube.com/shorts/...</code>. Lưu trong trình duyệt của bạn.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer class="page-footer">
   <div>Kế hoạch phục hồi 8 tuần · ATFL Grade 1 + Cầu lông</div>
   <div class="src">ke_hoach_tap_luyen_8tuan_ATFL_Grade1.md</div>
@@ -2804,6 +3138,166 @@ const WEEK_RANGES = [
   {w:7, start:'2026-07-03', end:'2026-07-09'},
   {w:8, start:'2026-07-10', end:'2026-07-16'},
 ];
+
+/* ============ VIDEO LIBRARY ============ */
+const VIDEOS_KEY = 'tp-videos-v1';
+const VIDEO_LIBRARY = {
+  'ankle-alphabet':            {label:'Ankle alphabet',                       search:'ankle alphabet exercise rehab'},
+  'knee-to-wall':              {label:'Knee-to-wall dorsiflexion stretch',    search:'knee to wall dorsiflexion stretch'},
+  'band-dorsiflexion':         {label:'Resistance band: dorsiflexion',        search:'resistance band ankle dorsiflexion'},
+  'band-plantarflexion':       {label:'Resistance band: plantarflexion',      search:'resistance band ankle plantarflexion'},
+  'band-eversion':             {label:'Resistance band: eversion',            search:'resistance band ankle eversion'},
+  'band-inversion':            {label:'Resistance band: inversion',           search:'resistance band ankle inversion rehab'},
+  'eccentric-calf-raise':      {label:'Eccentric calf raise',                 search:'eccentric calf raise rehab'},
+  'single-leg-calf-raise':     {label:'Single-leg calf raise',                search:'single leg calf raise'},
+  'calf-raise':                {label:'Calf raise (double-leg)',              search:'double leg calf raise'},
+  'toe-walks':                 {label:'Toe walks',                            search:'toe walks exercise rehab'},
+  'heel-walks':                {label:'Heel walks',                           search:'heel walks exercise rehab'},
+  'single-leg-balance-closed': {label:'Single-leg balance (eyes closed)',     search:'single leg balance eyes closed proprioception'},
+  'single-leg-balance':        {label:'Single-leg balance',                   search:'single leg balance exercise proprioception'},
+  'two-leg-balance':           {label:'Two-leg balance (eyes closed)',        search:'two leg balance eyes closed proprioception'},
+  'bosu-balance':              {label:'BOSU / wobble board balance',          search:'bosu balance exercise rehab'},
+  'star-excursion':            {label:'Star excursion / Y-balance',           search:'star excursion balance test rehab'},
+  'single-leg-glute-bridge':   {label:'Single-leg glute bridge',              search:'single leg glute bridge'},
+  'glute-bridge':              {label:'Glute bridge',                         search:'glute bridge exercise proper form'},
+  'clamshell':                 {label:'Clamshell',                            search:'clamshell exercise glute medius'},
+  'side-lying-hip-abduction':  {label:'Side-lying hip abduction',             search:'side lying hip abduction exercise'},
+  'monster-walk':              {label:'Monster walk / lateral band walk',     search:'monster walk lateral band walk'},
+  'hip-thrust':                {label:'Hip thrust',                           search:'barbell hip thrust glute'},
+  'bird-dog':                  {label:'Bird-dog',                             search:'bird dog exercise core'},
+  'dead-bug':                  {label:'Dead bug',                             search:'dead bug exercise core'},
+  'side-plank':                {label:'Side plank',                           search:'side plank exercise core'},
+  'plank':                     {label:'Plank',                                search:'plank exercise proper form'},
+  'pallof-press':              {label:'Pallof press',                         search:'pallof press anti rotation core'},
+  'bulgarian-split-squat':     {label:'Bulgarian split squat',                search:'bulgarian split squat form'},
+  'split-squat':               {label:'Split squat',                          search:'split squat exercise form'},
+  'goblet-squat':              {label:'Goblet squat',                         search:'goblet squat form technique'},
+  'wall-sit':                  {label:'Wall sit',                             search:'wall sit isometric quad'},
+  'step-up':                   {label:'Step-up',                              search:'dumbbell step up exercise'},
+  'walking-lunge':             {label:'Walking lunge',                        search:'walking lunge exercise'},
+  'reverse-lunge':             {label:'Reverse lunge',                        search:'reverse lunge exercise form'},
+  'lateral-lunge':             {label:'Lateral lunge',                        search:'lateral lunge side lunge'},
+  'forward-lunge':             {label:'Forward lunge',                        search:'forward lunge exercise form'},
+  'lunge':                     {label:'Lunge (basic)',                        search:'lunge exercise proper form'},
+  'rdl':                       {label:'Romanian deadlift (RDL)',              search:'romanian deadlift RDL proper form'},
+  'squat':                     {label:'Squat',                                search:'bodyweight squat proper form'},
+  'ytw-raises':                {label:'Y-T-W prone raises',                   search:'YTW prone raises shoulder rehab'},
+  'band-pull-apart':           {label:'Band pull-apart',                      search:'band pull apart shoulder exercise'},
+  'external-rotation':         {label:'External rotation (band)',             search:'shoulder external rotation band exercise'},
+  'scaption':                  {label:'Scaption',                             search:'scaption shoulder exercise rehab'},
+  'sleeper-stretch':           {label:'Sleeper stretch',                      search:'sleeper stretch shoulder internal rotation'},
+  'push-up':                   {label:'Push-up',                              search:'push up proper form technique'},
+  'inverted-row':              {label:'Inverted row',                         search:'inverted row bodyweight form'},
+  'seated-row':                {label:'Seated row',                           search:'seated cable row proper form'},
+  'scapular-cars':             {label:'Scapular CARs',                        search:'scapular CARs controlled articular rotations'},
+  'foam-rolling':              {label:'Foam rolling',                         search:'foam rolling technique calves IT band'},
+  'stationary-bike':           {label:'Stationary bike (Zone 2)',             search:'stationary bike Zone 2 cardio'},
+  'light-jog':                 {label:'Light jog',                            search:'easy jog running form'},
+  'pogo-hop':                  {label:'Pogo hop',                             search:'pogo hop plyometric ankle stiffness'},
+  'box-jump':                  {label:'Box jump',                             search:'box jump plyometric form'},
+  'depth-drop':                {label:'Depth drop / depth jump',              search:'depth drop plyometric landing'},
+  'single-leg-hop':            {label:'Single-leg hop',                       search:'single leg hop forward plyometric'},
+  'lateral-hop':               {label:'Lateral hop / skater',                 search:'lateral hop skater plyometric'},
+  'shuffle':                   {label:'Shuffle / sidestep',                   search:'lateral shuffle agility footwork'},
+  'cutting-drill':             {label:'Cutting drill',                        search:'cutting drill change of direction'},
+  't-test':                    {label:'T-test agility',                       search:'T test agility drill'},
+  'split-step':                {label:'Split step (badminton)',               search:'badminton split step footwork'},
+  'shadow-footwork':           {label:'Shadow footwork (badminton)',          search:'badminton shadow footwork drill 6 corners'},
+  'multifeed':                 {label:'Multifeed drill (badminton)',          search:'badminton multifeed drill'},
+  'smash':                     {label:'Smash technique (badminton)',          search:'badminton smash technique'},
+  'arm-circles':               {label:'Arm circles',                          search:'arm circles warm up shoulder'},
+  'worlds-greatest-stretch':   {label:"World's Greatest Stretch",              search:'worlds greatest stretch mobility'},
+  'hip-flexor-stretch':        {label:'Hip flexor stretch',                   search:'hip flexor stretch couch stretch'},
+};
+
+// Ordered most-specific → least-specific. First match wins.
+const VIDEO_MATCHERS = [
+  // ANKLE / band work (band rules must precede generic ankle terms)
+  {re:/ankle alphabet/i,                                                      key:'ankle-alphabet'},
+  {re:/knee.?to.?wall|dorsiflexion stretch/i,                                 key:'knee-to-wall'},
+  {re:/band.*dorsiflexion|dorsiflexion.*band/i,                               key:'band-dorsiflexion'},
+  {re:/band.*plantarflexion|plantarflexion.*band/i,                           key:'band-plantarflexion'},
+  {re:/band.*eversion|eversion.*band/i,                                       key:'band-eversion'},
+  {re:/band.*inversion|inversion.*band/i,                                     key:'band-inversion'},
+  // Calf raise variants
+  {re:/eccentric calf raise|calf drop/i,                                      key:'eccentric-calf-raise'},
+  {re:/single.?leg.*calf raise|calf raise.*một chân|calf raise.*single/i,     key:'single-leg-calf-raise'},
+  {re:/calf raise/i,                                                          key:'calf-raise'},
+  {re:/toe walk/i,                                                            key:'toe-walks'},
+  {re:/heel walk/i,                                                           key:'heel-walks'},
+  // Balance
+  {re:/single.?leg.*eyes closed|single.?leg.*nhắm/i,                          key:'single-leg-balance-closed'},
+  {re:/single.?leg.*eyes open|single.?leg balance/i,                          key:'single-leg-balance'},
+  {re:/2.?leg.*(eyes closed|balance)|two.?leg.*(eyes closed|balance)/i,       key:'two-leg-balance'},
+  {re:/bosu|wobble board|balance board|unstable surface/i,                    key:'bosu-balance'},
+  {re:/star excursion|y.?balance|SEBT/i,                                      key:'star-excursion'},
+  // Hip / glute
+  {re:/single.?leg.*glute bridge|glute bridge.*single.?leg|glute bridge bên/i,key:'single-leg-glute-bridge'},
+  {re:/glute bridge|hip bridge/i,                                             key:'glute-bridge'},
+  {re:/clamshell/i,                                                           key:'clamshell'},
+  {re:/side.?lying.*hip abduction|hip abduction.*side.?lying|side.?lying.*abduction/i,key:'side-lying-hip-abduction'},
+  {re:/monster walk|lateral band walk|band walk/i,                            key:'monster-walk'},
+  {re:/hip thrust/i,                                                          key:'hip-thrust'},
+  // Core
+  {re:/bird.?dog/i,                                                           key:'bird-dog'},
+  {re:/dead.?bug/i,                                                           key:'dead-bug'},
+  {re:/side plank/i,                                                          key:'side-plank'},
+  {re:/\bplank\b/i,                                                           key:'plank'},
+  {re:/pallof press/i,                                                        key:'pallof-press'},
+  // Lower body strength
+  {re:/bulgarian split squat/i,                                               key:'bulgarian-split-squat'},
+  {re:/split squat/i,                                                         key:'split-squat'},
+  {re:/goblet squat/i,                                                        key:'goblet-squat'},
+  {re:/wall sit/i,                                                            key:'wall-sit'},
+  {re:/step.?up/i,                                                            key:'step-up'},
+  {re:/walking lunge/i,                                                       key:'walking-lunge'},
+  {re:/reverse lunge|lunge lùi/i,                                             key:'reverse-lunge'},
+  {re:/lateral lunge|side lunge|lunge ngang/i,                                key:'lateral-lunge'},
+  {re:/forward lunge|lunge tiến/i,                                            key:'forward-lunge'},
+  {re:/\blunge\b/i,                                                           key:'lunge'},
+  {re:/romanian deadlift|\bRDL\b/i,                                           key:'rdl'},
+  {re:/\bsquat\b/i,                                                           key:'squat'},
+  // Shoulder / upper body
+  {re:/Y.?T.?W|prone raises/i,                                                key:'ytw-raises'},
+  {re:/band pull.?apart/i,                                                    key:'band-pull-apart'},
+  {re:/external rotation/i,                                                   key:'external-rotation'},
+  {re:/scaption/i,                                                            key:'scaption'},
+  {re:/sleeper stretch/i,                                                     key:'sleeper-stretch'},
+  {re:/push.?up/i,                                                            key:'push-up'},
+  {re:/inverted row/i,                                                        key:'inverted-row'},
+  {re:/seated row/i,                                                          key:'seated-row'},
+  {re:/scapular CARs|scapular cars/i,                                         key:'scapular-cars'},
+  // Foam rolling
+  {re:/foam roll/i,                                                           key:'foam-rolling'},
+  // Cardio
+  {re:/xe đạp|stationary bike|exercise bike|cycling|bicycle/i,                key:'stationary-bike'},
+  {re:/jog nhẹ|light jog|easy jog|chạy nhẹ/i,                                 key:'light-jog'},
+  // Plyo / agility
+  {re:/pogo hop|pogo jump/i,                                                  key:'pogo-hop'},
+  {re:/box jump/i,                                                            key:'box-jump'},
+  {re:/depth drop|depth jump/i,                                               key:'depth-drop'},
+  {re:/single.?leg hop|single.?leg jump/i,                                    key:'single-leg-hop'},
+  {re:/lateral hop|lateral bound|skater hop/i,                                key:'lateral-hop'},
+  {re:/shuffle|side.?step(?!\b)/i,                                            key:'shuffle'},
+  {re:/cutting drill|change of direction|COD drill/i,                         key:'cutting-drill'},
+  {re:/\bT.?test\b/i,                                                         key:'t-test'},
+  // Badminton
+  {re:/split.?step/i,                                                         key:'split-step'},
+  {re:/shadow|footwork.*cầu lông|cầu lông.*footwork|6.?corner|sáu góc/i,      key:'shadow-footwork'},
+  {re:/multifeed|multi.?feed/i,                                               key:'multifeed'},
+  {re:/smash/i,                                                               key:'smash'},
+  // Warmup / mobility
+  {re:/arm circle/i,                                                          key:'arm-circles'},
+  {re:/world.?s greatest stretch/i,                                           key:'worlds-greatest-stretch'},
+  {re:/hip flexor stretch|couch stretch/i,                                    key:'hip-flexor-stretch'},
+];
+
+function findVideoKey(text){
+  for(const m of VIDEO_MATCHERS){
+    if(m.re.test(text)) return m.key;
+  }
+  return null;
+}
 
 function dateStr(d){return d.toISOString().slice(0,10)}
 function daysBetween(a,b){return Math.floor((b-a)/(1000*60*60*24))}
@@ -2916,29 +3410,65 @@ function goToToday(){
 }
 
 /* ============ URL EXPORT / IMPORT ============ */
+// Format #x= bundles checks + videos (JSON); #s= is the legacy checks-only format.
 function exportState(){
   const ids = Object.keys(STATE).sort();
-  if(!ids.length){showToast('Chưa có check nào để chia sẻ');return}
-  const compact = ids.join(',');
-  const enc = btoa(unescape(encodeURIComponent(compact)));
-  const url = location.origin + location.pathname + '#s=' + enc;
+  const vKeys = (typeof VIDEOS === 'object') ? Object.keys(VIDEOS) : [];
+  if(!ids.length && !vKeys.length){
+    showToast('Chưa có gì để chia sẻ');
+    return;
+  }
+  let prefix, enc;
+  if(vKeys.length){
+    const payload = JSON.stringify({s:ids, v:VIDEOS});
+    enc = btoa(unescape(encodeURIComponent(payload)));
+    prefix = '#x=';
+  } else {
+    enc = btoa(unescape(encodeURIComponent(ids.join(','))));
+    prefix = '#s=';
+  }
+  const url = location.origin + location.pathname + prefix + enc;
   navigator.clipboard.writeText(url).then(()=>{
-    showToast('Đã copy link! Paste trên thiết bị khác để sync.');
+    const parts = [];
+    if(ids.length) parts.push(ids.length + ' check');
+    if(vKeys.length) parts.push(vKeys.length + ' video');
+    showToast('Đã copy link (' + parts.join(' · ') + '). Paste trên thiết bị khác để sync.');
   }).catch(()=>{
     prompt('Copy link:',url);
   });
 }
 function importFromUrl(){
   const h = location.hash;
-  if(!h.startsWith('#s=')) return;
+  if(!h) return;
   try{
-    const dec = decodeURIComponent(escape(atob(h.slice(3))));
-    const ids = dec.split(',').filter(Boolean);
-    STATE = {};
-    ids.forEach(id=>STATE[id]=1);
-    saveState(STATE);
-    showToast('Đã import ' + ids.length + ' bài tập từ link');
-    location.hash='';
+    if(h.startsWith('#x=')){
+      const dec = decodeURIComponent(escape(atob(h.slice(3))));
+      const obj = JSON.parse(dec);
+      let nc = 0, nv = 0;
+      if(Array.isArray(obj.s)){
+        STATE = {};
+        obj.s.forEach(id=>{STATE[id]=1; nc++;});
+        saveState(STATE);
+      }
+      if(obj.v && typeof obj.v === 'object'){
+        VIDEOS = Object.assign({}, VIDEOS, obj.v);
+        nv = Object.keys(obj.v).length;
+        saveVideos(VIDEOS);
+      }
+      const parts = [];
+      if(nc) parts.push(nc + ' check');
+      if(nv) parts.push(nv + ' video');
+      if(parts.length) showToast('Đã import: ' + parts.join(' · '));
+      location.hash = '';
+    } else if(h.startsWith('#s=')){
+      const dec = decodeURIComponent(escape(atob(h.slice(3))));
+      const ids = dec.split(',').filter(Boolean);
+      STATE = {};
+      ids.forEach(id=>STATE[id]=1);
+      saveState(STATE);
+      showToast('Đã import ' + ids.length + ' bài tập từ link');
+      location.hash='';
+    }
   }catch(e){showToast('Link không hợp lệ')}
 }
 function resetState(){
@@ -2958,6 +3488,215 @@ function showToast(msg){
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+/* ============ VIDEO MODAL ============ */
+function loadVideos(){
+  try{return JSON.parse(localStorage.getItem(VIDEOS_KEY)||'{}')}catch(e){return {}}
+}
+function saveVideos(v){localStorage.setItem(VIDEOS_KEY,JSON.stringify(v))}
+let VIDEOS = loadVideos();
+
+const YT_RE = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i;
+function parseYouTubeId(url){
+  if(!url) return null;
+  const m = String(url).match(YT_RE);
+  if(m) return m[1];
+  // Also accept a bare 11-char ID
+  const bare = String(url).trim();
+  if(/^[A-Za-z0-9_-]{11}$/.test(bare)) return bare;
+  return null;
+}
+
+let currentVKey = null;
+let currentVText = null;
+let lastFocused = null;
+
+function buildSearchQuery(key,text){
+  if(key && VIDEO_LIBRARY[key]) return VIDEO_LIBRARY[key].search;
+  if(!text) return 'rehab exercise';
+  // Heuristic: strip numbers, sets/reps, Vietnamese qualifiers
+  return text
+    .replace(/\d+\s*[×x]\s*\d+\S*/g,' ')
+    .replace(/\d+\s*['"′″s]\b/g,' ')
+    .replace(/\d+\s*(lần|hiệp|giây|phút|kg|bpm)\b/gi,' ')
+    .replace(/\b(bên đau|bên lành|nhẹ|đôi|một chân|mỗi bên|chân|tay)\b/gi,' ')
+    .replace(/[():;,\/]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+    .split(' ').slice(0,8).join(' ');
+}
+
+function buildLabel(key,text){
+  if(key && VIDEO_LIBRARY[key]) return VIDEO_LIBRARY[key].label;
+  if(!text) return 'Demo';
+  return text.length > 80 ? text.slice(0,77)+'…' : text;
+}
+
+function openVideoModal(key,text,trigger){
+  currentVKey = key;
+  currentVText = text;
+  lastFocused = trigger || document.activeElement;
+  const lbl = buildLabel(key,text);
+  const search = buildSearchQuery(key,text);
+  document.getElementById('vmodal-title').textContent = lbl;
+  document.getElementById('vmodal-search-btn').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(search);
+  const videoId = key ? VIDEOS[key] : null;
+  renderPlayer(videoId);
+  // Show "save unsupported" hint if no key
+  const pasteWrap = document.querySelector('.vmodal-paste');
+  if(!key){
+    pasteWrap.style.opacity = '.5';
+    pasteWrap.style.pointerEvents = 'none';
+    pasteWrap.title = 'Bài tập này chưa có trong thư viện — không thể lưu video';
+  } else {
+    pasteWrap.style.opacity = '';
+    pasteWrap.style.pointerEvents = '';
+    pasteWrap.title = '';
+  }
+  const modal = document.getElementById('vmodal');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+  setTimeout(()=>{
+    const focusTarget = videoId ? document.querySelector('.vmodal-close') : document.getElementById('vmodal-search-btn');
+    if(focusTarget) focusTarget.focus();
+  },120);
+}
+
+function renderPlayer(videoId){
+  const player = document.getElementById('vmodal-player');
+  const empty = document.getElementById('vmodal-empty');
+  const savedBar = document.getElementById('vmodal-saved-bar');
+  const openLink = document.getElementById('vmodal-open-yt');
+  // Always remove any existing iframe first (stops playback)
+  const old = player.querySelector('iframe');
+  if(old) old.remove();
+  if(videoId){
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube.com/embed/' + videoId + '?rel=0&modestbranding=1&playsinline=1';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
+    iframe.setAttribute('allowfullscreen','');
+    iframe.title = 'YouTube demo';
+    player.appendChild(iframe);
+    empty.style.display = 'none';
+    savedBar.hidden = false;
+    if(openLink) openLink.href = 'https://www.youtube.com/watch?v=' + videoId;
+  } else {
+    empty.style.display = 'flex';
+    savedBar.hidden = true;
+  }
+}
+
+function closeVideoModal(){
+  const modal = document.getElementById('vmodal');
+  if(!modal.classList.contains('open')) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+  // Stop video by removing iframe
+  const iframe = modal.querySelector('iframe');
+  if(iframe) iframe.remove();
+  // Reset input
+  const input = document.getElementById('vmodal-input');
+  input.value = '';
+  document.getElementById('vmodal-save').disabled = true;
+  currentVKey = null;
+  currentVText = null;
+  // Restore focus
+  if(lastFocused && typeof lastFocused.focus === 'function'){
+    lastFocused.focus();
+    lastFocused = null;
+  }
+}
+
+function saveVideoForCurrentExercise(){
+  if(!currentVKey){
+    showToast('Bài tập này chưa có trong thư viện');
+    return;
+  }
+  const input = document.getElementById('vmodal-input');
+  const id = parseYouTubeId(input.value.trim());
+  if(!id){
+    showToast('Link YouTube không hợp lệ');
+    return;
+  }
+  VIDEOS[currentVKey] = id;
+  saveVideos(VIDEOS);
+  renderPlayer(id);
+  input.value = '';
+  document.getElementById('vmodal-save').disabled = true;
+  refreshVideoIndicators();
+  const name = VIDEO_LIBRARY[currentVKey] ? VIDEO_LIBRARY[currentVKey].label : currentVKey;
+  showToast('Đã lưu: ' + name);
+}
+
+function clearVideoForCurrentExercise(){
+  if(!currentVKey) return;
+  delete VIDEOS[currentVKey];
+  saveVideos(VIDEOS);
+  renderPlayer(null);
+  refreshVideoIndicators();
+  showToast('Đã xóa video đã lưu');
+}
+
+function injectVideoButtons(){
+  const tplSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>';
+  document.querySelectorAll('label.ex').forEach(label=>{
+    if(label.querySelector('.ex-demo')) return;
+    const exText = label.querySelector('.ex-text');
+    if(!exText) return;
+    const text = exText.textContent.trim();
+    const key = findVideoKey(text);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ex-demo';
+    btn.setAttribute('aria-label','Xem demo: ' + (key ? VIDEO_LIBRARY[key].label : text.slice(0,40)));
+    btn.innerHTML = tplSvg;
+    if(key){
+      btn.dataset.vkey = key;
+      if(VIDEOS[key]) btn.classList.add('has-video');
+    }
+    btn.dataset.vtext = text;
+    btn.addEventListener('click',e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      openVideoModal(btn.dataset.vkey || null, btn.dataset.vtext, btn);
+    });
+    label.appendChild(btn);
+  });
+}
+
+function refreshVideoIndicators(){
+  document.querySelectorAll('.ex-demo').forEach(btn=>{
+    const key = btn.dataset.vkey;
+    if(key && VIDEOS[key]) btn.classList.add('has-video');
+    else btn.classList.remove('has-video');
+  });
+}
+
+function bindModalEvents(){
+  const modal = document.getElementById('vmodal');
+  modal.addEventListener('click',e=>{
+    if(e.target.dataset.vclose==='1' || e.target.closest('[data-vclose="1"]')){
+      closeVideoModal();
+    }
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape' && modal.classList.contains('open')) closeVideoModal();
+  });
+  document.getElementById('vmodal-save').addEventListener('click',saveVideoForCurrentExercise);
+  document.getElementById('vmodal-clear').addEventListener('click',clearVideoForCurrentExercise);
+  const input = document.getElementById('vmodal-input');
+  input.addEventListener('input',()=>{
+    document.getElementById('vmodal-save').disabled = !parseYouTubeId(input.value.trim());
+  });
+  input.addEventListener('keydown',e=>{
+    if(e.key==='Enter' && !document.getElementById('vmodal-save').disabled){
+      e.preventDefault();
+      saveVideoForCurrentExercise();
+    }
+  });
 }
 
 /* ============ REVEAL ON SCROLL ============ */
@@ -2983,6 +3722,8 @@ function init(){
   importFromUrl();
   attachCheckboxHandlers();
   restoreCheckboxes();
+  injectVideoButtons();
+  bindModalEvents();
   autoExpandToday();
   // Mark all panel children as reveal for scroll-in animation
   document.querySelectorAll('.panel > *').forEach(el=>{
