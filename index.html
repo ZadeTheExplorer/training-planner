@@ -1,13 +1,3005 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Training Planner - Lộ Trình Phục Hồi Cầu Lông</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kế Hoạch Phục Hồi 8 Tuần — ATFL Grade 1</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0b;
+  --bg-1:#111114;
+  --bg-2:#16161a;
+  --bg-3:#1d1d23;
+  --bg-hover:#26262d;
+  --border:#26262d;
+  --border-strong:#3a3a44;
+  --text:#f5f5f7;
+  --text-2:#a8a8b3;
+  --text-3:#6e6e78;
+  --amber:#ffb020;
+  --amber-bright:#ffcc4d;
+  --amber-glow:rgba(255,176,32,.18);
+  --amber-soft:rgba(255,176,32,.08);
+  --green:#22e07a;
+  --green-bright:#5cf2a0;
+  --green-glow:rgba(34,224,122,.18);
+  --green-soft:rgba(34,224,122,.08);
+  --accent:var(--amber);
+  --accent-bright:var(--amber-bright);
+  --accent-glow:var(--amber-glow);
+  --accent-soft:var(--amber-soft);
+  --radius-s:8px;
+  --radius:14px;
+  --radius-l:22px;
+  --shadow-lg:0 24px 60px -20px rgba(0,0,0,.6);
+}
+body[data-active-week="5"],body[data-active-week="6"],body[data-active-week="7"],body[data-active-week="8"]{
+  --accent:var(--green);
+  --accent-bright:var(--green-bright);
+  --accent-glow:var(--green-glow);
+  --accent-soft:var(--green-soft);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","SF Pro Display","Inter",system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  font-feature-settings:"ss01","cv11";
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:var(--accent-bright);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;
+  padding:96px 24px 64px;
+  text-align:center;
+  overflow:hidden;
+  isolation:isolate;
+}
+.hero::before,.hero::after{
+  content:"";
+  position:absolute;
+  width:600px;height:600px;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:.4;
+  z-index:-1;
+  transition:background 1.2s ease;
+}
+.hero::before{
+  top:-200px;left:-100px;
+  background:radial-gradient(circle,var(--amber) 0%,transparent 65%);
+}
+.hero::after{
+  bottom:-200px;right:-100px;
+  background:radial-gradient(circle,var(--green) 0%,transparent 65%);
+}
+.hero-eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 14px;
+  margin-bottom:24px;
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent-bright);
+}
+.hero-eyebrow .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent-bright);
+  box-shadow:0 0 12px var(--accent-bright);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(.8)}
+}
+.hero h1{
+  font-size:clamp(48px,9vw,104px);
+  font-weight:800;
+  letter-spacing:-.04em;
+  line-height:.98;
+  margin-bottom:20px;
+  background:linear-gradient(180deg,var(--text) 0%,#b8b8c0 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero h1 .accent-word{
+  background:linear-gradient(135deg,var(--amber-bright) 0%,var(--green-bright) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero-subtitle{
+  font-size:clamp(16px,2.2vw,21px);
+  color:var(--text-2);
+  max-width:680px;
+  margin:0 auto 48px;
+  font-weight:400;
+}
+.hero-subtitle strong{color:var(--text);font-weight:600}
+
+/* ===== COUNTDOWN GRID ===== */
+.countdown{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  max-width:880px;
+  margin:0 auto 64px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:var(--radius-l);
+  overflow:hidden;
+  backdrop-filter:blur(20px);
+}
+.count-item{
+  padding:28px 16px;
+  background:var(--bg-1);
+  transition:background .2s;
+}
+.count-item:hover{background:var(--bg-2)}
+.count-num{
+  display:block;
+  font-size:clamp(32px,5vw,52px);
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-.03em;
+  color:var(--accent-bright);
+  margin-bottom:6px;
+  font-variant-numeric:tabular-nums;
+}
+.count-label{
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--text-3);
+}
+
+/* ===== PHASE TIMELINE ===== */
+.phase-timeline{
+  max-width:980px;
+  margin:0 auto;
+  padding:0 8px;
+}
+.phase-timeline-label{
+  font-size:11px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--text-3);
+  margin-bottom:16px;
+}
+.phase-bar{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+}
+.phase{
+  position:relative;
+  padding:18px 16px;
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  text-align:left;
+  transition:all .3s;
+  overflow:hidden;
+}
+.phase::before{
+  content:"";position:absolute;
+  inset:0;
+  background:var(--phase-color);
+  opacity:.08;
+}
+.phase[data-phase="1"]{--phase-color:var(--amber)}
+.phase[data-phase="2"]{--phase-color:var(--amber)}
+.phase[data-phase="3"]{--phase-color:var(--green)}
+.phase[data-phase="4"]{--phase-color:var(--green)}
+.phase.current{
+  border-color:var(--phase-color);
+  box-shadow:0 0 0 1px var(--phase-color),0 8px 24px -8px var(--phase-color);
+}
+.phase-name{
+  font-size:14px;font-weight:700;
+  color:var(--text);
+  margin-bottom:4px;
+  position:relative;
+}
+.phase-weeks{
+  font-size:11px;
+  font-weight:500;
+  color:var(--text-3);
+  letter-spacing:.05em;
+  position:relative;
+}
+
+/* ===== TABS ===== */
+.tabs-wrap{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,10,11,.85);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:12px 0;
+  margin-bottom:48px;
+}
+.tabs{
+  display:flex;
+  gap:6px;
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 16px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;
+  padding:10px 18px;
+  font-size:14px;
+  font-weight:600;
+  color:var(--text-2);
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  border-radius:999px;
+  white-space:nowrap;
+  transition:all .25s cubic-bezier(.2,.8,.2,1);
+  position:relative;
+}
+.tab:hover{
+  background:var(--bg-2);
+  color:var(--text);
+  border-color:var(--border-strong);
+}
+.tab.active{
+  background:var(--accent);
+  color:#0a0a0b;
+  border-color:var(--accent);
+  box-shadow:0 6px 20px -6px var(--accent-glow);
+}
+.tab .week-num{
+  display:inline-block;
+  font-variant-numeric:tabular-nums;
+}
+.tab[data-week="1"],.tab[data-week="2"],.tab[data-week="3"],.tab[data-week="4"]{
+  --tab-accent:var(--amber);
+}
+.tab[data-week="5"],.tab[data-week="6"],.tab[data-week="7"],.tab[data-week="8"]{
+  --tab-accent:var(--green);
+}
+.tab.active[data-week="1"],.tab.active[data-week="2"],.tab.active[data-week="3"],.tab.active[data-week="4"]{
+  background:var(--amber);border-color:var(--amber);
+  box-shadow:0 6px 20px -6px var(--amber-glow);
+}
+.tab.active[data-week="5"],.tab.active[data-week="6"],.tab.active[data-week="7"],.tab.active[data-week="8"]{
+  background:var(--green);border-color:var(--green);
+  box-shadow:0 6px 20px -6px var(--green-glow);
+}
+
+/* ===== PANELS ===== */
+main{
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 24px 120px;
+}
+.panel{display:none;animation:fadeUp .5s cubic-bezier(.2,.8,.2,1)}
+.panel.active{display:block}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ===== WEEK INTRO ===== */
+.week-intro{
+  margin-bottom:48px;
+  padding:36px 36px;
+  background:linear-gradient(135deg,var(--bg-1) 0%,var(--bg-2) 100%);
+  border:1px solid var(--border);
+  border-radius:var(--radius-l);
+  position:relative;
+  overflow:hidden;
+}
+.week-intro::before{
+  content:"";position:absolute;
+  top:-50px;right:-50px;
+  width:300px;height:300px;
+  border-radius:50%;
+  background:var(--accent);
+  opacity:.06;
+  filter:blur(60px);
+}
+.week-eyebrow{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent-bright);
+  margin-bottom:10px;
+}
+.week-intro h2{
+  font-size:clamp(28px,4.2vw,44px);
+  font-weight:800;
+  letter-spacing:-.03em;
+  line-height:1.05;
+  margin-bottom:12px;
+}
+.week-meta{
+  font-size:14px;
+  color:var(--text-2);
+  margin-bottom:8px;
+  font-variant-numeric:tabular-nums;
+}
+.week-summary{
+  color:var(--text-2);
+  margin-top:14px;
+  max-width:780px;
+  font-size:15px;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-block{margin-top:28px;position:relative}
+.progress-track{
+  height:8px;
+  background:var(--bg-3);
+  border-radius:999px;
+  overflow:hidden;
+  position:relative;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent) 0%,var(--accent-bright) 100%);
+  border-radius:999px;
+  transition:width .5s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 0 12px var(--accent-glow);
+  width:0%;
+}
+.progress-meta{
+  display:flex;justify-content:space-between;
+  margin-top:10px;
+  font-size:13px;
+  color:var(--text-2);
+  font-variant-numeric:tabular-nums;
+}
+.progress-percent{
+  color:var(--accent-bright);
+  font-weight:700;
+}
+
+/* ===== DAY ITEMS ===== */
+.day-list{list-style:none;display:flex;flex-direction:column;gap:14px}
+.day{
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  transition:border-color .25s;
+}
+.day:hover{border-color:var(--border-strong)}
+.day[open]{
+  border-color:var(--accent);
+  box-shadow:0 0 0 1px var(--accent-glow);
+}
+.day-toggle{
+  display:flex;align-items:center;
+  width:100%;
+  padding:18px 22px;
+  text-align:left;
+  gap:16px;
+  list-style:none;
+}
+.day-toggle::-webkit-details-marker{display:none}
+.day-tag{
+  font-size:10px;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:6px;
+  background:var(--accent-soft);
+  color:var(--accent-bright);
+  letter-spacing:.08em;
+  flex-shrink:0;
+  font-variant-numeric:tabular-nums;
+}
+.day-tag.rest{
+  background:var(--bg-3);color:var(--text-3);
+}
+.day-title{
+  flex:1;
+  font-size:15px;
+  font-weight:600;
+  color:var(--text);
+}
+.day-duration{
+  font-size:12px;
+  color:var(--text-3);
+  font-variant-numeric:tabular-nums;
+  flex-shrink:0;
+}
+.day-chevron{
+  width:18px;height:18px;
+  flex-shrink:0;
+  color:var(--text-3);
+  transition:transform .25s;
+}
+.day[open] .day-chevron{transform:rotate(90deg);color:var(--accent)}
+.day[open] .day-toggle{border-bottom:1px solid var(--border)}
+.day-body{padding:20px 22px 24px}
+.day-note{
+  font-size:14px;
+  color:var(--text-2);
+  margin-bottom:18px;
+  padding:12px 14px;
+  background:var(--bg-2);
+  border-left:3px solid var(--accent);
+  border-radius:0 var(--radius-s) var(--radius-s) 0;
+}
+.day-note strong{color:var(--text)}
+.day-subhead{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-3);
+  margin:16px 0 10px;
+}
+
+/* ===== EXERCISES ===== */
+.ex-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.ex-list .ex-list{
+  margin-left:20px;
+  margin-top:6px;
+  padding-left:14px;
+  border-left:1px dashed var(--border-strong);
+}
+.ex{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:10px 12px;
+  border-radius:var(--radius-s);
+  cursor:pointer;
+  transition:background .15s;
+  user-select:none;
+}
+.ex:hover{background:var(--bg-2)}
+.ex input[type="checkbox"]{
+  position:absolute;opacity:0;pointer-events:none;
+}
+.ex .check-box{
+  flex-shrink:0;
+  width:20px;height:20px;
+  border:2px solid var(--border-strong);
+  border-radius:6px;
+  display:flex;
+  align-items:center;justify-content:center;
+  transition:all .2s;
+  margin-top:1px;
+  background:var(--bg-2);
+}
+.ex .check-box svg{
+  width:12px;height:12px;
+  stroke:#0a0a0b;
+  stroke-width:3.5;
+  fill:none;
+  opacity:0;
+  transform:scale(.5);
+  transition:all .2s cubic-bezier(.2,.8,.2,1);
+}
+.ex input:checked + .check-box{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+.ex input:checked + .check-box svg{
+  opacity:1;
+  transform:scale(1);
+}
+.ex input:checked ~ .ex-text{
+  color:var(--text-3);
+  text-decoration:line-through;
+  text-decoration-color:var(--accent);
+  text-decoration-thickness:2px;
+}
+.ex-text{
+  font-size:14.5px;
+  color:var(--text);
+  line-height:1.5;
+  transition:color .2s;
+}
+.ex-text strong{color:var(--accent-bright);font-weight:600}
+.ex-text em{font-style:italic;color:var(--text-2)}
+
+/* ===== OVERVIEW SECTIONS ===== */
+.section{
+  margin-bottom:40px;
+}
+.section-head{
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  margin-bottom:18px;
+}
+.section-num{
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.15em;
+  color:var(--accent-bright);
+  font-variant-numeric:tabular-nums;
+}
+.section h2{
+  font-size:clamp(24px,3.6vw,38px);
+  font-weight:800;
+  letter-spacing:-.02em;
+  line-height:1.1;
+}
+.section h3{
+  font-size:20px;
+  font-weight:700;
+  margin:24px 0 10px;
+  letter-spacing:-.01em;
+}
+.section p{
+  color:var(--text-2);
+  margin-bottom:14px;
+  font-size:15.5px;
+}
+.section p strong{color:var(--text);font-weight:600}
+.section ul{
+  list-style:none;
+  margin-bottom:14px;
+}
+.section ul li{
+  position:relative;
+  padding-left:22px;
+  margin-bottom:8px;
+  color:var(--text-2);
+  font-size:15px;
+}
+.section ul li::before{
+  content:"";
+  position:absolute;
+  left:6px;top:10px;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--accent);
+}
+.section ol{
+  list-style:none;
+  counter-reset:ol;
+  margin-bottom:14px;
+}
+.section ol li{
+  position:relative;
+  padding-left:34px;
+  margin-bottom:8px;
+  color:var(--text-2);
+  font-size:15px;
+  counter-increment:ol;
+}
+.section ol li::before{
+  content:counter(ol);
+  position:absolute;
+  left:0;top:0;
+  width:24px;height:24px;
+  border-radius:50%;
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  color:var(--accent-bright);
+  font-size:11px;
+  font-weight:700;
+  display:flex;
+  align-items:center;justify-content:center;
+  font-variant-numeric:tabular-nums;
+}
+
+.card{
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px;
+  margin-bottom:20px;
+}
+.card-eyebrow{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent-bright);
+  margin-bottom:8px;
+}
+.card h3{margin-top:0}
+
+/* TL;DR Card */
+.tldr{
+  background:linear-gradient(135deg,var(--bg-1) 0%,var(--bg-2) 100%);
+  border:1px solid var(--accent);
+  border-radius:var(--radius-l);
+  padding:36px;
+  margin-bottom:40px;
+  box-shadow:0 24px 60px -30px var(--accent-glow);
+  position:relative;
+  overflow:hidden;
+}
+.tldr::before{
+  content:"";position:absolute;
+  top:-100px;left:-100px;
+  width:400px;height:400px;
+  border-radius:50%;
+  background:var(--accent);
+  opacity:.04;
+  filter:blur(80px);
+}
+.tldr-title{
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent-bright);
+  margin-bottom:18px;
+}
+
+/* ===== TABLES ===== */
+.tbl-wrap{
+  overflow-x:auto;
+  margin:20px 0;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13.5px;
+  background:var(--bg-1);
+}
+th{
+  text-align:left;
+  padding:14px 16px;
+  font-weight:700;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--text-3);
+  background:var(--bg-2);
+  border-bottom:1px solid var(--border);
+}
+td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  color:var(--text-2);
+  vertical-align:top;
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg-2)}
+td strong{color:var(--text)}
+.phase-amber td:first-child{color:var(--amber-bright);font-weight:700}
+.phase-green td:first-child{color:var(--green-bright);font-weight:700}
+
+/* ===== DETAILS / COLLAPSIBLE ===== */
+.fold{
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  margin-bottom:14px;
+  overflow:hidden;
+  transition:border-color .25s;
+}
+.fold:hover{border-color:var(--border-strong)}
+.fold[open]{border-color:var(--accent);background:var(--bg-1)}
+.fold-summary{
+  display:flex;align-items:center;
+  padding:20px 24px;
+  gap:14px;
+  cursor:pointer;
+  list-style:none;
+  user-select:none;
+}
+.fold-summary::-webkit-details-marker{display:none}
+.fold-icon{
+  flex-shrink:0;
+  width:32px;height:32px;
+  border-radius:8px;
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--accent-bright);
+  font-weight:700;
+  font-size:14px;
+  transition:all .25s;
+}
+.fold[open] .fold-icon{
+  background:var(--accent);
+  color:#0a0a0b;
+}
+.fold-icon.warn-icon{
+  background:rgba(255,82,82,.08);
+  border-color:#ff5252;
+  color:#ff7676;
+}
+.fold[open] .fold-icon.warn-icon{
+  background:#ff5252;
+  color:#fff;
+}
+.fold-title{
+  flex:1;
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+}
+.fold-sub{
+  font-size:13px;
+  color:var(--text-3);
+  margin-left:auto;
+  margin-right:14px;
+}
+.fold-chevron{
+  width:16px;height:16px;
+  color:var(--text-3);
+  transition:transform .25s;
+  flex-shrink:0;
+}
+.fold[open] .fold-chevron{transform:rotate(90deg);color:var(--accent)}
+.fold-body{
+  padding:0 24px 28px;
+  border-top:1px solid var(--border);
+  padding-top:24px;
+}
+
+/* ===== CALLOUT ===== */
+.callout{
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  border-radius:var(--radius);
+  padding:18px 22px;
+  margin:18px 0;
+  position:relative;
+}
+.callout-icon{
+  display:inline-flex;
+  align-items:center;gap:8px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--accent-bright);
+  margin-bottom:6px;
+}
+.callout p:last-child{margin-bottom:0}
+.callout.warn{
+  --accent:#ff5252;
+  --accent-bright:#ff7676;
+  --accent-soft:rgba(255,82,82,.08);
+  --accent-glow:rgba(255,82,82,.18);
+}
+
+/* ===== KPI GRID ===== */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+  margin:20px 0;
+}
+.kpi{
+  padding:20px;
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.kpi-num{
+  font-size:28px;
+  font-weight:800;
+  color:var(--accent-bright);
+  line-height:1;
+  margin-bottom:6px;
+  letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+}
+.kpi-label{
+  font-size:12px;
+  color:var(--text-3);
+  letter-spacing:.05em;
+}
+
+/* ===== FAB / ACTIONS ===== */
+.fab-bar{
+  position:fixed;
+  bottom:24px;right:24px;
+  display:flex;
+  gap:10px;
+  z-index:100;
+}
+.fab{
+  padding:12px 18px;
+  background:var(--bg-2);
+  border:1px solid var(--border-strong);
+  border-radius:999px;
+  color:var(--text-2);
+  font-size:13px;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:all .2s;
+  box-shadow:var(--shadow-lg);
+  backdrop-filter:blur(20px);
+}
+.fab:hover{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#0a0a0b;
+}
+.fab svg{width:14px;height:14px}
+.fab.primary{
+  background:var(--accent);
+  color:#0a0a0b;
+  border-color:var(--accent);
+  box-shadow:0 8px 24px -6px var(--accent-glow);
+}
+.fab.primary:hover{background:var(--accent-bright)}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;
+  bottom:90px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  padding:12px 22px;
+  background:var(--bg-3);
+  border:1px solid var(--accent);
+  border-radius:999px;
+  color:var(--text);
+  font-size:14px;
+  font-weight:500;
+  opacity:0;
+  transition:all .3s;
+  pointer-events:none;
+  z-index:200;
+  box-shadow:var(--shadow-lg);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== FADE-IN ===== */
+.reveal{
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1);
+}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ===== FOOTER ===== */
+footer.page-footer{
+  border-top:1px solid var(--border);
+  padding:48px 24px 32px;
+  text-align:center;
+  color:var(--text-3);
+  font-size:13px;
+}
+footer.page-footer .src{
+  display:inline-block;
+  padding:6px 12px;
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  border-radius:6px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:11px;
+  margin-top:8px;
+}
+
+/* ===== UTILITIES ===== */
+.mute{color:var(--text-3)}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  padding:3px 10px;
+  background:var(--accent-soft);
+  border:1px solid var(--accent);
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  color:var(--accent-bright);
+  letter-spacing:.04em;
+}
+.pill.dim{
+  background:var(--bg-2);
+  border-color:var(--border-strong);
+  color:var(--text-3);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:780px){
+  .hero{padding:64px 16px 40px}
+  .countdown{grid-template-columns:repeat(2,1fr);margin-bottom:40px}
+  .phase-bar{grid-template-columns:repeat(2,1fr)}
+  main{padding:0 16px 100px}
+  .week-intro{padding:24px 22px;border-radius:var(--radius)}
+  .day-toggle{padding:14px 16px;flex-wrap:wrap}
+  .day-title{font-size:14px;width:100%;order:3;margin-top:4px}
+  .day-body{padding:16px 16px 20px}
+  .day-note{font-size:13px}
+  .ex-text{font-size:14px}
+  .tldr{padding:24px;border-radius:var(--radius)}
+  .card{padding:20px}
+  .section h2{font-size:24px}
+  .fold-summary{padding:16px 18px;flex-wrap:wrap}
+  .fold-sub{display:none}
+  .fold-body{padding:20px 18px;padding-top:20px}
+  .fab-bar{bottom:16px;right:16px}
+  .fab{padding:10px 14px;font-size:12px}
+  .fab .fab-label-long{display:none}
+}
+@media (max-width:480px){
+  .hero h1{font-size:48px}
+  .count-num{font-size:32px}
+}
+
+/* ===== PRINT ===== */
+@media print{
+  .tabs-wrap,.fab-bar{display:none}
+  .panel{display:block!important;page-break-before:always}
+  body{background:#fff;color:#000}
+  .day-body,.fold-body{display:block!important}
+}
+</style>
+</head>
+<body data-active-week="overview">
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="dot"></span>
+    <span>ATFL Grade 1 · Đang phục hồi</span>
+  </div>
+  <h1>Kế Hoạch <span class="accent-word">Phục Hồi</span><br>8 Tuần</h1>
+  <p class="hero-subtitle">Cầu lông trở lại sân — <strong>22/05/2026</strong> → <strong>16/07/2026</strong>. Một kế hoạch kép, đan xen góc nhìn vật lý trị liệu và huấn luyện viên.</p>
+
+  <div class="countdown">
+    <div class="count-item"><span class="count-num" id="kpi-days">--</span><span class="count-label">Ngày Còn Lại</span></div>
+    <div class="count-item"><span class="count-num" id="kpi-week">--</span><span class="count-label">Tuần Hiện Tại</span></div>
+    <div class="count-item"><span class="count-num" id="kpi-postday">--</span><span class="count-label">Day Post-Injury</span></div>
+    <div class="count-item"><span class="count-num" id="kpi-pct">--</span><span class="count-label">Tiến Độ Tổng</span></div>
+  </div>
+
+  <div class="phase-timeline">
+    <div class="phase-timeline-label">4 Giai Đoạn · 8 Tuần</div>
+    <div class="phase-bar">
+      <div class="phase" data-phase="1" data-weeks="1,2">
+        <div class="phase-name">Foundation</div>
+        <div class="phase-weeks">Tuần 1–2 · 22/05 → 04/06</div>
+      </div>
+      <div class="phase" data-phase="2" data-weeks="3,4">
+        <div class="phase-name">Strength</div>
+        <div class="phase-weeks">Tuần 3–4 · 05 → 18/06</div>
+      </div>
+      <div class="phase" data-phase="3" data-weeks="5,6">
+        <div class="phase-name">Sport-Specific</div>
+        <div class="phase-weeks">Tuần 5–6 · 19/06 → 02/07</div>
+      </div>
+      <div class="phase" data-phase="4" data-weeks="7,8">
+        <div class="phase-name">Peak</div>
+        <div class="phase-weeks">Tuần 7–8 · 03 → 16/07</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ TABS ============ -->
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="overview">Tổng Quan</button>
+    <button class="tab" data-tab="week-1" data-week="1">Tuần <span class="week-num">1</span></button>
+    <button class="tab" data-tab="week-2" data-week="2">Tuần <span class="week-num">2</span></button>
+    <button class="tab" data-tab="week-3" data-week="3">Tuần <span class="week-num">3</span></button>
+    <button class="tab" data-tab="week-4" data-week="4">Tuần <span class="week-num">4</span></button>
+    <button class="tab" data-tab="week-5" data-week="5">Tuần <span class="week-num">5</span></button>
+    <button class="tab" data-tab="week-6" data-week="6">Tuần <span class="week-num">6</span></button>
+    <button class="tab" data-tab="week-7" data-week="7">Tuần <span class="week-num">7</span></button>
+    <button class="tab" data-tab="week-8" data-week="8">Tuần <span class="week-num">8</span></button>
+  </div>
+</div>
+
+<!-- ============ MAIN PANELS ============ -->
+<main>
+
+<!-- PANEL: OVERVIEW -->
+<section class="panel active" id="panel-overview">
+  <!-- TL;DR -->
+  <div class="tldr reveal">
+    <div class="tldr-title">TL;DR — Cập nhật với chẩn đoán Grade 1</div>
+    <ul>
+      <li><strong>Chẩn đoán mới:</strong> ATFL Grade 1 (microscopic tear, không có mechanical instability) — grade nhẹ nhất, tissue healing 1–3 tuần, full recovery 4–6 tuần.</li>
+      <li><strong>Vị trí timeline:</strong> Hôm nay 22/05 = Day 9 post-injury = giai đoạn <strong>subacute/early proliferation</strong>. Đã qua acute inflammation, đang trong collagen synthesis tích cực — đúng thời điểm "mechanical loading is essential" theo PEACE &amp; LOVE.</li>
+      <li><strong>Điều chỉnh:</strong> Đẩy nhanh proprioception (tuần 1 đã có single-leg eyes closed bên đau), plyometric nhẹ chuyển từ tuần 3 lên cuối tuần 2, có thể đánh feeding drill nhẹ cuối tuần 2 nếu pass mini-check.</li>
+      <li><strong>KHÔNG đổi:</strong> Đeo brace 6–12 tháng, proprioception kéo dài 6+ tuần, social full-pace vẫn từ tuần 5–6 sau khi pass RTS test battery.</li>
+      <li><strong>Lý do plan vẫn 8 tuần:</strong> Cổ chân chỉ là 1 trong 4 vấn đề. Yếu thể lực, đau gối (PFPS giả định), vai mỏi, cổ tay yếu — cần thời gian thật bất kể ankle hồi phục nhanh.</li>
+    </ul>
+  </div>
+
+  <!-- Phase Overview Table -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">01</span><h2>Lịch 8 tuần</h2></div>
+    <p>Mapping ngày cụ thể, trạng thái mô và cột mốc đánh cầu cho mỗi tuần.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Phase</th><th>Tuần</th><th>Ngày</th><th>Post-Injury</th><th>Trạng thái ATFL</th><th>Đánh cầu</th></tr>
+        </thead>
+        <tbody>
+          <tr class="phase-amber"><td>Foundation</td><td>1</td><td>22–28/05 (T6–T5)</td><td>Day 9–15</td><td>Subacute → late proliferation</td><td>KHÔNG</td></tr>
+          <tr class="phase-amber"><td>Foundation</td><td>2</td><td>29/05–04/06</td><td>Day 16–22</td><td>Proliferation → early remodeling</td><td>Mini-check cuối tuần; drill nhẹ optional</td></tr>
+          <tr class="phase-amber"><td>Strength</td><td>3</td><td>05–11/06</td><td>Day 23–29</td><td>Early remodeling</td><td>Drill cố định + brace ✓</td></tr>
+          <tr class="phase-amber"><td>Strength</td><td>4</td><td>12–18/06</td><td>Day 30–36</td><td>Remodeling</td><td>Drill 2 góc, mở rộng</td></tr>
+          <tr class="phase-green"><td>Sport-specific</td><td>5</td><td>19–25/06</td><td>Day 37–43</td><td>Remodeling mature</td><td>RTS TEST → Social half-pace</td></tr>
+          <tr class="phase-green"><td>Sport-specific</td><td>6</td><td>26/06–02/07</td><td>Day 44–50</td><td>Remodeling complete</td><td>Social full-pace + brace</td></tr>
+          <tr class="phase-green"><td>Peak</td><td>7</td><td>03–09/07</td><td>Day 51–57</td><td>Tissue mature</td><td>Social + match</td></tr>
+          <tr class="phase-green"><td>Peak</td><td>8</td><td>10–16/07</td><td>Day 58–64</td><td>Tissue mature</td><td>Social + match</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- KPI Goals -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">02</span><h2>Mục tiêu định lượng cuối tuần 8</h2></div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-num">≥45s</div><div class="kpi-label">Single-leg balance eyes closed</div></div>
+      <div class="kpi"><div class="kpi-num">≥95%</div><div class="kpi-label">Single-leg hop LSI</div></div>
+      <div class="kpi"><div class="kpi-num">4×30s</div><div class="kpi-label">6-corner shadow, nghỉ 30s</div></div>
+      <div class="kpi"><div class="kpi-num">1.0–1.2×BW</div><div class="kpi-label">Goblet squat × 8 reps</div></div>
+      <div class="kpi"><div class="kpi-num">25–30</div><div class="kpi-label">Push-up strict</div></div>
+      <div class="kpi"><div class="kpi-num">8–10</div><div class="kpi-label">Pull-up / Inverted row</div></div>
+      <div class="kpi"><div class="kpi-num">90s</div><div class="kpi-label">Plank</div></div>
+      <div class="kpi"><div class="kpi-num">90'</div><div class="kpi-label">Social không đau ankle/gối</div></div>
+    </div>
+  </div>
+
+  <!-- PART 1: REHAB ANALYSIS -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">03</span><h2>Góc nhìn A — Phục hồi chức năng</h2></div>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">1</div>
+        <div class="fold-title">Đánh giá tình trạng (cập nhật Grade 1)</div>
+        <div class="fold-sub">Tissue healing · timeline</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <p><strong>Cổ chân trái — ATFL Grade 1 confirmed:</strong> Grade 1 = chỉ stretching và microscopic tear, không có partial/complete rupture, không có mechanical instability khi physio làm anterior drawer test. Bạn ở <strong>Day 9 post-injury = giữa giai đoạn proliferation (Day 4–21)</strong> khi collagen synthesis cao nhất. Việc đã chạy 9 km/h × 15 phút là consistent với Grade 1 healing bình thường.</p>
+        <p>Tài liệu lâm sàng (Doctronic, Banff Sport Med, Backcountry Physio): Grade 1 ATFL có tenderness mild trên ATFL (ngay phía trước lateral malleolus), sưng tối thiểu localized, full weight-bearing OK, pain mild-moderate, single-leg stance pain nhẹ. <strong>Recovery 1–3 tuần với rehab tích cực, 4–6 tuần full recovery</strong>. So sánh: case Sarah cross-country runner (Goodhands PT) — Grade 1 textbook → quay lại chạy sau <strong>12 ngày</strong> với progressive return protocol.</p>
+        <h3>Các vấn đề khác — không đổi</h3>
+        <ul>
+          <li><strong>Đầu gối:</strong> nghi PFPS, nguyên nhân dynamic knee valgus do yếu gluteus medius — JOSPT 2012 (Khayambashi et al.) chứng minh hip strengthening hiệu quả 1 năm.</li>
+          <li><strong>Vai phải:</strong> pattern overhead athlete + dân văn phòng, có thể GIRD. Cần posterior shoulder stretch + rotator cuff prehab.</li>
+          <li><strong>Cổ tay mỏi:</strong> endurance kém wrist flexor/extensor, không tổn thương cấu trúc.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">2</div>
+        <div class="fold-title">Nguyên tắc LOVE (Dubois &amp; Esculier BJSM 2020)</div>
+        <div class="fold-sub">Load · Optimism · Vascularisation · Exercise</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <p>Bạn đã qua phase PEACE, hiện ở <strong>L-O-V-E</strong>:</p>
+        <ul>
+          <li><strong>Load:</strong> Tải cơ học sớm thúc đẩy mechanotransduction → tissue repair. Phù hợp Day 9 trở đi.</li>
+          <li><strong>Optimism:</strong> Tin tưởng vào hồi phục.</li>
+          <li><strong>Vascularisation:</strong> Aerobic pain-free đã bắt đầu — duy trì.</li>
+          <li><strong>Exercise:</strong> Bằng chứng mạnh nhất giảm tái phát.</li>
+        </ul>
+        <div class="callout warn">
+          <div class="callout-icon">⚠ Tránh</div>
+          <p>NSAIDs kéo dài (cản healing), chỉ dùng paracetamol khi cần. Ice sau Day 3 (đã qua). Không thụ động.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">3</div>
+        <div class="fold-title">Tận dụng Grade 1 — đẩy nhanh ở những đâu</div>
+        <div class="fold-sub">So sánh plan gốc vs plan Grade 1</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Bài</th><th>Plan gốc</th><th>Plan Grade 1</th></tr></thead>
+            <tbody>
+              <tr><td>Single-leg balance eyes closed bên đau</td><td>Tuần 2</td><td><strong>Tuần 1 (Day 9)</strong></td></tr>
+              <tr><td>BOSU/wobble board single-leg</td><td>Tuần 3</td><td><strong>Tuần 2</strong></td></tr>
+              <tr><td>Bilateral pogo, jump rope nhẹ</td><td>Tuần 3</td><td><strong>Cuối tuần 2</strong></td></tr>
+              <tr><td>Bilateral broad jump</td><td>Tuần 4</td><td><strong>Tuần 3</strong></td></tr>
+              <tr><td>Single-leg hop sagittal plane</td><td>Tuần 5</td><td><strong>Tuần 4</strong></td></tr>
+              <tr><td>Feeding drill cố định + brace</td><td>Tuần 3</td><td><strong>Tuần 2 cuối nếu pass mini-check</strong></td></tr>
+              <tr><td>Social half-pace có brace</td><td>Tuần 5</td><td>Tuần 5 (KHÔNG đổi)</td></tr>
+              <tr><td>Social full-pace</td><td>Tuần 6 sau RTS</td><td>Tuần 6 sau RTS (KHÔNG đổi)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <div class="callout-icon">💡 Insight</div>
+          <p>Lý do KHÔNG đẩy nhanh return-to-social: Grade 1 cho phép tissue healing nhanh nhưng <strong>proprioceptive deficit + sport-specific conditioning + đau gối/vai chưa giải quyết</strong> cần đủ 5–6 tuần. Đừng nhầm "ankle hết đau" với "sẵn sàng quay lại sport".</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">4</div>
+        <div class="fold-title">RTS Criteria — PAASS framework</div>
+        <div class="fold-sub">5 tiêu chí pass cuối tuần 5</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <p>Cần đạt cuối tuần 5 / đầu tuần 6:</p>
+        <ul>
+          <li><strong>P</strong>ain ≤2/10 trong và 24h sau</li>
+          <li><strong>A</strong>thlete perception ≥80% tự tin</li>
+          <li><strong>A</strong>nkle: dorsiflexion đối xứng, eversion strength ≥90% bên lành</li>
+          <li><strong>S</strong>ensorimotor: Y-Balance composite ≥94% LSI, single-leg balance eyes closed ≥30s</li>
+          <li><strong>S</strong>port-specific: single-leg hop ≥90% LSI, side-hop, figure-8, hoàn thành 1 buổi full không tái phát</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon warn-icon">!</div>
+        <div class="fold-title">Red flags — phải khám ngay</div>
+        <div class="fold-sub">Dấu hiệu nghiêm trọng</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <div class="callout warn">
+          <div class="callout-icon">🚨 Dừng ngay</div>
+          <p>Đau cấp tính khi sờ malleolus/navicular/5th metatarsal → Ottawa rule → X-ray; sưng tái phát đột ngột; "giving way" khi đi thường; đau gối &gt;5/10 + locking.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- PART 2: COACH ANALYSIS -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">04</span><h2>Góc nhìn B — Huấn luyện viên cầu lông</h2></div>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">1</div>
+        <div class="fold-title">Nhu cầu thể thao (Faude et al. 2007)</div>
+        <div class="fold-sub">630 rally analysis</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <p>12 internationally ranked players, 630 rally analysis: <strong>rally trung bình 5.5 ± 4.4s, rest 11.4 ± 6.0s, 5.1 ± 3.9 shot/rally → work:rest ≈ 1:2</strong>. VO₂ 73.3% VO₂peak, HR 89% HRmax, lactate 1.9 mmol/L. 86% rally kết thúc trong 9–10s.</p>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-num">5.5s</div><div class="kpi-label">Rally trung bình</div></div>
+          <div class="kpi"><div class="kpi-num">11.4s</div><div class="kpi-label">Rest trung bình</div></div>
+          <div class="kpi"><div class="kpi-num">1:2</div><div class="kpi-label">Work:Rest ratio</div></div>
+          <div class="kpi"><div class="kpi-num">89%</div><div class="kpi-label">HR max</div></div>
+        </div>
+        <h3>Implications</h3>
+        <ul>
+          <li>Aerobic base (Zone 2) để hồi phục giữa rally</li>
+          <li>Anaerobic-alactic 5–10s sprint cho rally đỉnh</li>
+          <li>HIIT 1:2 (15s/30s) mô phỏng đúng</li>
+          <li>Power lower body + reactive strength</li>
+          <li>Core anti-rotation + rotation power</li>
+          <li>Wrist endurance + grip 2h liên tục</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">2</div>
+        <div class="fold-title">Vấn đề kỹ thuật</div>
+        <div class="fold-sub">Mạnh/Yếu</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <p><strong>Mạnh:</strong> Smash tốt, footwork lên/xuống/ngang cơ bản ổn — có nền kỹ thuật.</p>
+        <p><strong>Yếu:</strong></p>
+        <ol>
+          <li>Linh hoạt di chuyển — split-step không đều, recovery chậm, thiếu chasse step</li>
+          <li>Thể lực — VO2max và lactate threshold thấp</li>
+          <li>Cổ tay mỏi — wrist endurance + grip thấp, có thể grip racket quá chặt</li>
+          <li>Vai mỏi — rotator cuff endurance kém</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">3</div>
+        <div class="fold-title">Ưu tiên huấn luyện</div>
+        <div class="fold-sub">4 trục tập trung</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ol>
+          <li>Footwork &amp; agility (6-corner shadow, ladder, cone, reactive)</li>
+          <li>HIIT 1:2 mô phỏng rally</li>
+          <li>Power + plyometric</li>
+          <li>Wrist/grip endurance + rotator cuff prehab (Thrower's 10)</li>
+        </ol>
+        <div class="callout">
+          <div class="callout-icon">💡 Tận dụng Grade 1</div>
+          <p>Shadow swing tại nhà 5–10' mỗi ngày từ tuần 1 (không di chuyển nhiều, chỉ tập swing technique) để duy trì timing — không gây áp lực cho ankle.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- PART 3: A vs B DEBATES -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">05</span><h2>Tranh luận A vs B</h2></div>
+    <p>Bảy điểm tranh luận giữa physio và coach, mỗi điểm có cách dung hòa cụ thể.</p>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">1</div>
+        <div class="fold-title">Khi nào quay lại đánh? — điểm tranh cãi chính</div>
+        <div class="fold-sub">Mini-check 04/06</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <p><strong>B:</strong> "Grade 1 nhẹ vậy, đánh feeding drill nhẹ tuần 2 cuối thì OK rồi."</p>
+        <p><strong>A:</strong> "Mini-check pass thì OK, nhưng plan vẫn ưu tiên tuần 3 chắc chắn."</p>
+        <h3>Dung hòa — protocol mini-check cuối tuần 2 (04/06)</h3>
+        <ol>
+          <li>Single-leg hop bên đau ≥80% bên lành về distance</li>
+          <li>Không đau khi inversion stress passive</li>
+          <li>Single-leg balance eyes closed bên đau ≥20s</li>
+          <li>Pain ≤2/10 sau buổi tập gym tuần 2</li>
+        </ol>
+        <p><strong>Pass ≥3/4 → feeding drill nhẹ 20' tuần 2 cuối có brace</strong><br>
+        <strong>Fail → giữ T3 như plan gốc</strong></p>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">2</div>
+        <div class="fold-title">HIIT cường độ cao</div>
+        <div class="fold-sub">Impact vs anaerobic</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <p><strong>Dung hòa:</strong> HIIT từ tuần 2 trên non-impact (xe đạp/rower), chạy HIIT từ tuần 4, shadow HIIT từ tuần 5.</p>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">3</div>
+        <div class="fold-title">Plyometric — bao giờ?</div>
+        <div class="fold-sub">Grade 1 cho phép đẩy nhanh</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ul>
+          <li>Bilateral pogo từ cuối tuần 2 (đã đẩy từ tuần 3)</li>
+          <li>Single-leg hop từ tuần 4 (đã đẩy từ tuần 5)</li>
+          <li>Miller et al. (Sportsmith): plyo 6 tuần × 90–140 contacts × 2 buổi/tuần cải thiện ankle stability hơn resistive training.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">4</div>
+        <div class="fold-title">Strength: nặng vs nhẹ? — periodization</div>
+        <div class="fold-sub">4 phase loading</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ul>
+          <li><strong>Phase 1 (T1–2):</strong> 3×12–15 @ 50–65% 1RM — anatomical adaptation</li>
+          <li><strong>Phase 2 (T3–4):</strong> 3–4×8–10 @ 70–75% — hypertrophy/strength</li>
+          <li><strong>Phase 3 (T5–6):</strong> 3–4×4–6 @ 80–85% + power 3–5 explosive</li>
+          <li><strong>Phase 4 (T7–8):</strong> peaking complex (heavy + plyo)</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">5</div>
+        <div class="fold-title">Có nên đeo brace lâu dài? — Grade 1 KHÔNG miễn</div>
+        <div class="fold-sub">4 RCT evidence</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ul>
+          <li>Cordova 2000: brace KHÔNG làm yếu khớp.</li>
+          <li>McGuine 2011 AJSM (RCT n=1460): HR 0.32 (CI 0.20–0.52) giảm injury rate.</li>
+          <li>Janssen 2014 BJSM (RCT n=384 post-sprain): RR 0.53 giảm tái phát.</li>
+          <li>Dizon meta-analysis (6 RCT, n=4882): OR 0.31 — <strong>giảm 69% recurrence</strong>.</li>
+        </ul>
+        <div class="callout">
+          <div class="callout-icon">✓ Quyết định</div>
+          <p>Đeo brace ASO/Aircast A60 mỗi buổi đánh cầu <strong>6–12 tháng tối thiểu</strong>, bất kể Grade 1.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">6</div>
+        <div class="fold-title">Static stretching trước tập?</div>
+        <div class="fold-sub">Behm 2011 NSCA</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <p><strong>KHÔNG.</strong> Dynamic warm-up thay thế. Static chỉ trước ngủ / sau tập.</p>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">7</div>
+        <div class="fold-title">Foam rolling vs massage gun?</div>
+        <div class="fold-sub">MDPI Sports 2025</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ul>
+          <li>Cả 2 cải thiện stiffness tạm thời, "did not significantly reduce pain compared to rest".</li>
+          <li>La Trobe 2025: "may acutely impair physical performance" — KHÔNG dùng ngay trước explosive workout.</li>
+          <li>Foam roller daily đủ 80% nhu cầu; massage gun bổ sung cho upper trap chronic.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- PART 5: DESK EXERCISES -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">06</span><h2>Desk exercises &amp; routine trước ngủ</h2></div>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">A</div>
+        <div class="fold-title">Desk — Bộ A: Vai/cổ (ưu tiên)</div>
+        <div class="fold-sub">Mỗi 2h · 3–5'</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ol>
+          <li>Chin tucks 10×3</li>
+          <li>Seated upper trap stretch 30s/bên × 2</li>
+          <li>Doorway pec stretch 30s × 2</li>
+          <li>Shoulder rolls 10 lần lùi</li>
+          <li>Scapular squeeze 10×3</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">B</div>
+        <div class="fold-title">Desk — Bộ B: Cổ chân (dưới bàn)</div>
+        <div class="fold-sub">Khi đứng pha cà phê</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ol>
+          <li>Ankle alphabet 2 lần/chân</li>
+          <li>Heel raise ngồi 20 + toe raise 20 × 2 sets</li>
+          <li>Single-leg balance khi đứng pha cà phê 30s/bên</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">C</div>
+        <div class="fold-title">Desk — Bộ C: Cổ tay</div>
+        <div class="fold-sub">Khi typing nhiều</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ol>
+          <li>Prayer stretch 30s + Reverse prayer 30s</li>
+          <li>Wrist circles 10 lần mỗi hướng</li>
+          <li>Finger fan + fist clench 10 reps</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">🌙</div>
+        <div class="fold-title">Routine trước ngủ (10–15')</div>
+        <div class="fold-sub">10 bước hồi phục</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ol>
+          <li>Foam roll IT band + quad 1'/chân</li>
+          <li>Foam roll upper back/thoracic 2'</li>
+          <li>Lacrosse ball trigger upper trap 1'/bên</li>
+          <li>Pigeon stretch 60s/bên</li>
+          <li>Couch stretch (hip flexor) 60s/bên</li>
+          <li>Sleeper stretch 30s × 2/bên</li>
+          <li>Cross-body stretch 30s × 2/bên</li>
+          <li>Doorway pec stretch 30s × 2</li>
+          <li>Standing calf stretch (gastroc + soleus) 30s × 2</li>
+          <li>Diaphragmatic breathing 5'</li>
+        </ol>
+      </div>
+    </details>
+  </div>
+
+  <!-- PART 6: PRODUCTS -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">07</span><h2>Sản phẩm hỗ trợ</h2></div>
+
+    <details class="fold" open>
+      <summary class="fold-summary">
+        <div class="fold-icon">★</div>
+        <div class="fold-title">Ưu tiên cao — mua tuần này</div>
+        <div class="fold-sub">~75 USD tổng</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ol>
+          <li><strong>Ankle brace ASO</strong> (~30–40 USD) hoặc <strong>Aircast A60</strong> (~40 USD). Đeo MỖI buổi đánh cầu <strong>6–12 tháng</strong>. ASO thoáng hơn; A60 gọn semi-rigid.</li>
+          <li><strong>Foam roller cứng vừa</strong> (~15 USD): TriggerPoint GRID hoặc generic 33 cm. Daily.</li>
+          <li><strong>Resistance band set với handle</strong> (3 độ kháng, ~20 USD): TheraBand. Cho rotator cuff, wrist, ankle.</li>
+          <li><strong>Lacrosse ball / trigger point ball</strong> (~5 USD): upper trap, suboccipital, glute med.</li>
+          <li><strong>Compression sleeve cổ chân + đầu gối</strong> (~15 USD/cái).</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">○</div>
+        <div class="fold-title">Ưu tiên trung bình</div>
+        <div class="fold-sub">Massage gun · Kinesio tape</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ol start="6">
+          <li><strong>Massage gun</strong> (~50–150 USD): Renpho R3, Bob and Brad C2, Theragun Mini. KHÔNG trực tiếp lên ankle 4 tuần đầu. KHÔNG dùng ngay trước explosive workout.</li>
+          <li><strong>Kinesio tape</strong>: SMD −0.63 cho pain (low-certainty cho sưng). Bổ sung cho upper trap căng.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">🥗</div>
+        <div class="fold-title">Bổ sung dinh dưỡng</div>
+        <div class="fold-sub">6 supplements</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ol start="8">
+          <li><strong>Protein</strong> 1.6–2.0 g/kg BW/ngày</li>
+          <li><strong>Omega-3 (EPA+DHA)</strong> 1.5–3 g/ngày, 8–12 tuần</li>
+          <li><strong>Gelatin 15g + Vitamin C</strong> trước tập 1h (Shaw 2017 AJCN) — collagen synthesis</li>
+          <li><strong>Magnesium glycinate</strong> 200–400 mg buổi tối</li>
+          <li><strong>Vitamin D3</strong> 2000 IU/ngày</li>
+          <li><strong>Creatine monohydrate</strong> 3–5 g/ngày (optional)</li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon warn-icon">✕</div>
+        <div class="fold-title">KHÔNG khuyến nghị</div>
+        <div class="fold-sub">Tránh</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <ul>
+          <li>Knee sleeve neoprene dày — không thay được hip strengthening</li>
+          <li>Wrist support khi chơi cầu — cản wrist snap</li>
+          <li>NSAID oral &gt;5–7 ngày — cản healing</li>
+          <li>Ice pack thường xuyên sau ngày 3</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- PART 7: WARNINGS -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">08</span><h2>Cảnh báo &amp; recommendations</h2></div>
+
+    <div class="callout warn">
+      <div class="callout-icon">🚨 Red flags — DỪNG NGAY và đi khám</div>
+      <ol>
+        <li>Đau cấp tính khi sờ malleolus/navicular/5th metatarsal (Ottawa → X-ray)</li>
+        <li>Sưng tái phát &gt;50% so với ban đầu sau buổi tập</li>
+        <li>"Giving way" trong sinh hoạt thường</li>
+        <li>Đau gối ≥5/10 khi gập 90°, click + lock</li>
+        <li>Đau vai khi nâng tay qua đầu kèm yếu — impingement</li>
+        <li>Đau ngực, khó thở khi HIIT</li>
+        <li>Đau thần kinh tỏa xuống chân/tay</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-eyebrow">Cảnh báo tái phát</div>
+      <h3>Grade 1 không miễn rủi ro</h3>
+      <p>Cohort 30,910 ca quân y Mỹ (Rhon IJSPT 2021): <strong>44.2% tái phát trong 5 năm</strong> ở all-grade lateral ankle sprain. ~20% phát triển chronic ankle instability. <strong>Quyết định lớn nhất:</strong> kiên trì brace + proprioception 6–12 tháng.</p>
+    </div>
+
+    <details class="fold">
+      <summary class="fold-summary">
+        <div class="fold-icon">⚖</div>
+        <div class="fold-title">Khi nào tăng/giảm load</div>
+        <div class="fold-sub">6 tín hiệu</div>
+        <svg class="fold-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="fold-body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Tín hiệu</th><th>Hành động</th></tr></thead>
+            <tbody>
+              <tr><td>Cổ chân sưng qua đêm</td><td>Giảm intensity 30%, ngừng 1 buổi đánh</td></tr>
+              <tr><td>Đau gối ≥4/10 sau lunge</td><td>Tránh forward lunge, dùng reverse lunge, tăng glute med</td></tr>
+              <tr><td>Upper trap căng + nhức đầu</td><td>Tăng desk exercises, giảm volume vai 1 tuần</td></tr>
+              <tr><td>Cổ tay đau khi grip</td><td>Giảm grip work 1 tuần, kiểm tra grip size racket</td></tr>
+              <tr><td>Ngủ kém, mệt kéo dài</td><td>Bỏ 1 buổi HIIT, thay Zone 2 hoặc nghỉ</td></tr>
+              <tr><td>RPE ≤6/10 cho session khó, không đau</td><td>Sẵn sàng tăng 10–15% tuần sau</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <div class="card">
+      <div class="card-eyebrow">3 hành động ưu tiên ngay tuần này</div>
+      <ol>
+        <li><strong>MUA:</strong> ASO ankle brace + resistance band set + foam roller (~75 USD tổng)</li>
+        <li><strong>TẬP:</strong> Bắt đầu Day 1 hôm nay 22/05 theo Phase 1, focus quality không tham volume</li>
+        <li><strong>THEO DÕI:</strong> Pain trung bình mỗi ngày (NPRS 0–10), sưng qua đêm, ngủ — note để điều chỉnh mini-check cuối tuần 2</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- RECOMMENDATIONS & CAVEATS -->
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">09</span><h2>Recommendations</h2></div>
+    <ol>
+      <li><strong>Theo lịch 8 tuần với điều chỉnh Grade 1</strong> (đẩy nhanh proprioception + plyometric nhẹ + mini-check tuần 2). KHÔNG rút ngắn social return — tuần 5–6 vẫn là mốc đúng.</li>
+      <li><strong>Đeo brace ASO/Aircast A60 mỗi buổi đánh cầu 6–12 tháng</strong> — Grade 1 không miễn.</li>
+      <li><strong>Hip + glute med work từ Day 1</strong> — chìa khóa giải quyết đau gối PFPS + đề phòng tái phát ankle.</li>
+      <li><strong>Static stretching CHỈ trước ngủ và sau tập</strong>; dynamic warm-up 10' trước workout.</li>
+      <li><strong>HIIT 1:2 (15s/30s)</strong> từ tuần 2 trên xe đạp/rower; chuyển sang shadow badminton từ tuần 5.</li>
+      <li><strong>Mini-check cuối tuần 2 (04/06)</strong> — pass ≥3/4 tiêu chí → feeding drill nhẹ 20'; fail → đợi tuần 3.</li>
+      <li><strong>Threshold tham vấn y tế</strong>: tái phát đau cấp sau tuần 4, hoặc fail RTS test sau tuần 6 → khám sports MSK + MRI nếu cần.</li>
+    </ol>
+  </div>
+
+  <div class="section reveal">
+    <div class="section-head"><span class="section-num">10</span><h2>Caveats</h2></div>
+    <div class="callout">
+      <div class="callout-icon">ℹ Lưu ý</div>
+      <ul>
+        <li>Plan dựa trên chẩn đoán Grade 1 từ physio. Nếu pain tăng đột ngột hoặc xuất hiện instability, khám lại để loại trừ grade upgrade.</li>
+        <li>Đau gối hai bên giả định PFPS — không phải chẩn đoán chính thức. Nếu có locking/giving-way → khám chuyên khoa.</li>
+        <li>Mini-check tuần 2 là tiêu chí ngưỡng do mình thiết kế, không phải validated test battery.</li>
+        <li>Tải tạ là gợi ý xuất phát, điều chỉnh theo RPE thực tế và 1RM cá nhân.</li>
+        <li>Bằng chứng PEACE &amp; LOVE là editorial (level expert opinion); với Grade 1 mức độ nhẹ, đây là khung phù hợp.</li>
+        <li>Plan KHÔNG thay tư vấn y khoa cá nhân — khám trực tiếp PT chuyên thể thao tuần 1–2 vẫn rất giá trị.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PANEL: WEEK 1 -->
+<section class="panel" id="panel-week-1">
+  <div class="week-intro">
+    <div class="week-eyebrow">Phase 1 · Foundation</div>
+    <h2>Tuần 1 — Foundation A</h2>
+    <p class="week-meta">22 → 28/05 (T6 → T5) · Day 9–15 post-injury · Subacute → late proliferation</p>
+    <p class="week-summary">Đẩy nhanh proprioception ngay từ ngày đầu — tận dụng giai đoạn collagen synthesis cao nhất. KHÔNG đánh cầu tuần này, focus quality &gt; volume.</p>
+    <div class="progress-block">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="progress-text">0 / 0 bài tập hoàn thành</span>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <ol class="day-list">
+    <!-- DAY 1: T6 22/05 -->
+    <details class="day" data-date="2026-05-22">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 9</span>
+        <span class="day-title">Thứ 6 22/05 — Ankle Rehab + Mobility</span>
+        <span class="day-duration">50'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <p class="day-note">Đây là buổi tập đầu tiên. Đừng tham, focus <strong>quality &gt; volume</strong>.</p>
+        <div class="day-subhead">Warm-up</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Warm-up 5': ankle alphabet 2 lần/chân, calf raise đôi 2×15</span></label></li>
+        </ul>
+        <div class="day-subhead">Ankle protocol</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Knee-to-wall dorsiflexion stretch 3×30s/chân</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Resistance band: dorsiflexion 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Resistance band: plantarflexion 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Resistance band: eversion 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Resistance band: <strong>inversion 3×10 nhẹ pain-free</strong> (động tác gây đau khi lật — bắt đầu rất nhẹ)</span></label></li>
+        </ul>
+        <div class="day-subhead">Balance progression — tận dụng Grade 1</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">2-leg eyes closed 3×30s</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-8"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg bên lành eyes open 3×30s</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-9"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Single-leg bên đau eyes open 3×20s</strong> — đẩy sớm</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-10"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Single-leg bên đau eyes closed 2×15s</strong> — đẩy sớm</span></label></li>
+        </ul>
+        <div class="day-subhead">Hip + Core</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-11"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Glute bridge 3×12</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-12"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Clamshell 3×15/bên</span></label></li>
+        </ul>
+        <div class="day-subhead">Cool-down</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d1-13"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Foam roll calves, IT band, glutes 5'</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- DAY 2: T7 23/05 -->
+    <details class="day" data-date="2026-05-23">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 10</span>
+        <span class="day-title">Thứ 7 23/05 — Upper Body + Core</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Arm circle, scapular CARs, band pull-apart 2×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Y-T-W prone raises 3×10/chữ với tạ 1–2 kg</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">External rotation band 3×15/tay (khuỷu sát thân, 90°)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Scaption đến 90° tạ nhẹ 3×12</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Push-up (knee nếu cần) 3×8–12</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Inverted row hoặc seated row 3×10</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bird-dog 3×8/bên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-8"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Dead bug 3×10/bên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-9"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Plank 3×30s</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-10"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Sleeper stretch 2×30s/vai</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d2-11"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Foam roll upper back 5'</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- DAY 3: CN 24/05 -->
+    <details class="day" data-date="2026-05-24">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 11</span>
+        <span class="day-title">Chủ nhật 24/05 — Aerobic + Light Lower</span>
+        <span class="day-duration">50'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d3-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Xe đạp tĩnh Zone 2 (HR 130–145 bpm) 30'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d3-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Glute bridge 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d3-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg glute bridge bên lành 3×10</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d3-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wall sit 3×30s (góc 70°, KHÔNG xuống sâu nếu đau gối)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d3-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Side-lying hip abduction 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d3-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Calf raise đôi 3×20</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- DAY 4: T2 25/05 -->
+    <details class="day" data-date="2026-05-25">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Recovery</span>
+        <span class="day-title">Thứ 2 25/05 — Active Recovery</span>
+        <span class="day-duration">45'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d4-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đi bộ 30'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d4-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Giãn cơ ngủ 10'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d4-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Shadow swing tại nhà 5' (không di chuyển, chỉ tập technique cánh tay/cổ tay)</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- DAY 5: T3 26/05 -->
+    <details class="day" data-date="2026-05-26">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 13</span>
+        <span class="day-title">Thứ 3 26/05 — Wrist + Vai + Ankle Round 2</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Lặp ankle protocol Day 1, <strong>tăng inversion lên 3×12 nếu pain ≤2/10</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist curl 3×15 (tạ 2–3 kg)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Reverse wrist curl 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist radial/ulnar deviation 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pronation/supination DB asymmetric 3×12</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Grip squeeze (stress ball) 3×20</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Forearm pronation rapid với band (mô phỏng wrist snap) 3×30s</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-8"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Rotator cuff: external rotation @ 0° band 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-9"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Rotator cuff: internal rotation 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-10"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Tibialis raise 3×15 (phòng shin splint)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d5-11"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Foam roll forearms 3'</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- DAY 6: T4 27/05 -->
+    <details class="day" data-date="2026-05-27">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Rest</span>
+        <span class="day-title">Thứ 4 27/05 — Nghỉ hoàn toàn</span>
+        <span class="day-duration">15'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d6-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Desk exercises (mỗi 2h tại văn phòng)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d6-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Giãn cơ trước ngủ 15'</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- DAY 7: T5 28/05 -->
+    <details class="day" data-date="2026-05-28">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 15</span>
+        <span class="day-title">Thứ 5 28/05 — Aerobic + Core</span>
+        <span class="day-duration">50'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w1d7-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bơi (kick nhẹ với phao) hoặc xe đạp Zone 2 35'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d7-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pallof press band 3×10/bên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d7-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Side plank 3×20s/bên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d7-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bird-dog 3×8/bên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w1d7-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Cable woodchop nhẹ 3×10/hướng</span></label></li>
+        </ul>
+      </div>
+    </details>
+  </ol>
+</section>
+<section class="panel" id="panel-week-2">
+  <div class="week-intro">
+    <div class="week-eyebrow">Phase 1 · Foundation</div>
+    <h2>Tuần 2 — Foundation B</h2>
+    <p class="week-meta">29/05 → 04/06 · Day 16–22 post-injury · Proliferation → early remodeling</p>
+    <p class="week-summary">Mở rộng từ Tuần 1, bắt đầu thêm plyometric nhẹ và <strong>optional return-to-court drill nếu pass mini-check</strong> cuối tuần.</p>
+    <div class="progress-block">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="progress-text">0 / 0 bài tập hoàn thành</span>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <ol class="day-list">
+    <details class="day" data-date="2026-05-29">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 16</span>
+        <span class="day-title">Thứ 6 29/05 — Ankle + Lower Strength</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Warm-up dynamic 8'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Ankle protocol đầy đủ</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg balance eyes closed bên đau 3×30s</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>BOSU/wobble board single-leg bên đau 3×30s</strong> — đẩy sớm</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Goblet squat 3×12 @ 8–10 kg</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Reverse lunge DB 3×8/chân (KHÔNG forward lunge)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg Romanian deadlift bodyweight 3×8/chân</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-8"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Calf raise đôi 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d1-9"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Foam roll cool-down</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-05-30">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 17</span>
+        <span class="day-title">Thứ 7 30/05 — Upper + Wrist + Rotator cuff</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <p class="day-note">Như tuần 1, tăng tạ Y-T-W lên 2–3 kg, push-up 3×10–12 hoặc thêm 1 set.</p>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d2-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Y-T-W prone raises 3×10/chữ <strong>tăng tạ 2–3 kg</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d2-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">External rotation band 3×15/tay</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d2-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Scaption đến 90° 3×12</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d2-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Push-up 3×10–12</strong> (hoặc thêm 1 set)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d2-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Inverted row hoặc seated row 3×10</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d2-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist routine đầy đủ (curl, reverse, deviation, pronation, grip)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d2-7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bird-dog 3×8/bên, Dead bug 3×10/bên, Plank 3×30s</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d2-8"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Sleeper stretch + foam roll upper back</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-05-31">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 18</span>
+        <span class="day-title">Chủ nhật 31/05 — Aerobic Zone 2 + HIIT đầu tiên</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d3-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Aerobic Zone 2 xe đạp 25'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d3-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>HIIT xe đạp: 30s work / 60s rest × 6 sets</strong> — HIIT đầu tiên, non-impact</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d3-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Core finisher: plank 3×45s</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d3-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Side plank 3×25s/bên</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-01">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Recovery</span>
+        <span class="day-title">Thứ 2 01/06 — Active Recovery</span>
+        <span class="day-duration">40'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d4-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đi bộ 30'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d4-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Shadow swing 10'</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-02">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 20</span>
+        <span class="day-title">Thứ 3 02/06 — Lower Strength + Plyometric nhẹ</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d5-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Warm-up dynamic 10'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d5-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Goblet squat 3×10 @ 12 kg</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d5-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bulgarian split squat bodyweight 3×8/chân</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d5-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg calf raise 3×10/bên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d5-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Bilateral pogo (jump rope tại chỗ) 3×20</strong> — plyo đầu tiên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d5-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Bilateral broad jump nhẹ 3×5</strong> (landing mềm, không max effort)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d5-7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Side-lying hip abduction 3×15</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-03">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Rest</span>
+        <span class="day-title">Thứ 4 03/06 — Nghỉ</span>
+        <span class="day-duration">—</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d6-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Desk exercises + giãn cơ trước ngủ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-04">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 22 · MINI-CHECK</span>
+        <span class="day-title">Thứ 5 04/06 — Mini-check + buổi tập</span>
+        <span class="day-duration">70'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <div class="callout">
+          <div class="callout-icon">🎯 Mini-check (10')</div>
+          <p>Trước tập, thực hiện 4 tiêu chí — pass ≥3/4 để được đánh feeding drill nhẹ.</p>
+        </div>
+        <div class="day-subhead">Mini-check criteria</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-mc1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg hop for distance bên đau vs bên lành: <strong>≥80% LSI</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-mc2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Inversion stress test passive: <strong>pain ≤2/10</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-mc3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg balance eyes closed bên đau: <strong>≥20s</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-mc4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pain trung bình tuần qua: <strong>≤2/10</strong></span></label></li>
+        </ul>
+        <div class="day-subhead">Nếu PASS — Feeding drill 20–25'</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-p1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Đeo brace.</strong> Ai feed cố định vào 1 vị trí (net hoặc clear)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-p2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">KHÔNG di chuyển nhiều, KHÔNG cutting</span></label></li>
+        </ul>
+        <div class="day-subhead">Nếu FAIL — Buổi tập thường</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-f1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">HIIT xe đạp 30s/60s × 8 sets</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-f2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Y-T-W + rotator cuff</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w2d7-f3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist routine</span></label></li>
+        </ul>
+      </div>
+    </details>
+  </ol>
+</section>
+<section class="panel" id="panel-week-3">
+  <div class="week-intro">
+    <div class="week-eyebrow">Phase 2 · Strength</div>
+    <h2>Tuần 3 — Strength &amp; Endurance Building</h2>
+    <p class="week-meta">05 → 11/06 · Day 23–29 post-injury · Early remodeling</p>
+    <p class="week-summary">Drill cố định + brace ✓ — quay lại court với protocol cố định, không cutting, không jump.</p>
+    <div class="progress-block">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="progress-text">0 / 0 bài tập hoàn thành</span>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+  <ol class="day-list">
+    <details class="day" data-date="2026-06-05">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 23</span>
+        <span class="day-title">Thứ 6 05/06 — Lower Strength</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w3d1-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Warm-up dynamic 8'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d1-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Goblet squat 4×10 @ 12–16 kg</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d1-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Reverse lunge DB 3×10/chân</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d1-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg Romanian deadlift 3×8/chân với tạ 6–8 kg</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d1-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg calf raise 3×12/bên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d1-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Cossack squat 2×8/bên (mobility)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d1-7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Foam roll cool-down</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-06">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 24</span>
+        <span class="day-title">Thứ 7 06/06 — Upper Push/Pull + Core + Wrist</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w3d2-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">DB bench press 3×10</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d2-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pull-up assisted hoặc lat pulldown 3×8–10</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d2-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Seated row 3×12</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d2-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">DB overhead press 3×10 (chỉ khi không đau vai)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d2-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Face pull band 3×15</strong> (anti-impingement, cực kỳ quan trọng)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d2-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist routine, tăng tạ wrist curl 4 kg</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d2-7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pallof press 3×12/bên</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d2-8"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Plank 3×45s</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-07">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 25</span>
+        <span class="day-title">Chủ nhật 07/06 — Aerobic + Footwork shadow (ĐEO BRACE)</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w3d3-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Warm-up: jump rope 3', step-up nhẹ 3'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d3-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Shadow badminton 6-corner <strong>SLOW tempo</strong> 4×30s on / 60s off (nửa tốc độ, focus form chasse/lunge)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d3-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Ladder drill: 2-in-2-out, lateral shuffle, in-out — 5 patterns × 2 lần</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d3-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Zone 2 xe đạp 20'</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-08">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Recovery</span>
+        <span class="day-title">Thứ 2 08/06 — Active Recovery</span>
+        <span class="day-duration">40'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w3d4-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đi bộ + shadow swing + giãn cơ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-09">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 27</span>
+        <span class="day-title">Thứ 3 09/06 — HIIT + Wrist + Vai</span>
+        <span class="day-duration">55'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w3d5-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Warm-up 8'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d5-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>HIIT xe đạp/rower: 15s sprint / 30s rest × 10 sets</strong> (1:2 mô phỏng đúng cầu lông)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d5-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Vai protocol Y-T-W + external rotation 3×12</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d5-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist routine đầy đủ</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d5-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Cool-down stretch</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-10">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Rest</span>
+        <span class="day-title">Thứ 4 10/06 — Nghỉ</span>
+        <span class="day-duration">—</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w3d6-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Desk exercises + routine trước ngủ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-11">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 29 · COURT</span>
+        <span class="day-title">Thứ 5 11/06 — Đánh cầu drill cố định (ĐEO BRACE)</span>
+        <span class="day-duration">45–60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w3d7-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Warm-up off-court 10'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d7-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Feeding drill: feed cố định 1 vị trí (net + lift), <strong>3 sets × 10', nghỉ 3'</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d7-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Shadow swing 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w3d7-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Cool-down stretch</span></label></li>
+        </ul>
+      </div>
+    </details>
+  </ol>
+</section>
+<section class="panel" id="panel-week-4">
+  <div class="week-intro">
+    <div class="week-eyebrow">Phase 2 · Strength</div>
+    <h2>Tuần 4 — Strength &amp; Endurance Peaking</h2>
+    <p class="week-meta">12 → 18/06 · Day 30–36 post-injury · Remodeling</p>
+    <p class="week-summary">Mở rộng feeding drill sang 2 góc, intro rotation power, single-leg hop sagittal — chuẩn bị RTS test tuần 5.</p>
+    <div class="progress-block">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="progress-text">0 / 0 bài tập hoàn thành</span>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+  <ol class="day-list">
+    <details class="day" data-date="2026-06-12">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 30</span>
+        <span class="day-title">Thứ 6 12/06 — Lower Power Foundation</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w4d1-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Front squat hoặc goblet squat 4×8 @ <strong>70% 1RM</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d1-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Bulgarian split squat 4×8/chân</strong> với tạ tay (single-leg stability)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d1-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg RDL với tạ 3×8</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d1-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">KB swing 3×12 (posterior chain power)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d1-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Calf raise loaded 3×12</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-13">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 31</span>
+        <span class="day-title">Thứ 7 13/06 — Upper Strength + Wrist intensification</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w4d2-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">DB bench 3×8 <strong>nặng hơn</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d2-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pull-up 3×8 (thêm tạ nếu được)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d2-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Face pull 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d2-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Med ball overhead slam 3×6</strong> (intro rotation power — bắt đầu nhẹ)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d2-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Rotator cuff routine</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d2-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist routine (tăng tạ)</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-14">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 32</span>
+        <span class="day-title">Chủ nhật 14/06 — Footwork tăng tempo + agility</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w4d3-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">6-corner shadow 4×45s on / 60s off, <strong>tempo trung bình</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d3-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Ladder + cone 10'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d3-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Zone 2 25'</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-15">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Recovery</span>
+        <span class="day-title">Thứ 2 15/06 — Active Recovery</span>
+        <span class="day-duration">40'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w4d4-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đi bộ 30' + shadow swing + giãn cơ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-16">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 34</span>
+        <span class="day-title">Thứ 3 16/06 — HIIT 1:2 nâng cao + Single-leg hop</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w4d5-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>20s work / 40s rest × 10 sets</strong> trên xe đạp/rower</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d5-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Hoặc HIIT chạy nhẹ trên máy chạy incline thấp nếu OK</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d5-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Plyometric: <strong>single-leg hop in place sagittal plane 3×8/chân</strong> — đẩy sớm từ tuần 5</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-17">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Rest</span>
+        <span class="day-title">Thứ 4 17/06 — Nghỉ</span>
+        <span class="day-duration">—</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w4d6-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Desk exercises + routine trước ngủ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-18">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 36 · COURT</span>
+        <span class="day-title">Thứ 5 18/06 — Feeding drill mở rộng 2 góc</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w4d7-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Feed 2 góc trước</strong> (net P + T), <strong>KHÔNG jump</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d7-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Tăng tempo nhẹ</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w4d7-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Cool-down ice 5' nếu hơi mỏi</span></label></li>
+        </ul>
+      </div>
+    </details>
+  </ol>
+</section>
+<section class="panel" id="panel-week-5">
+  <div class="week-intro">
+    <div class="week-eyebrow">Phase 3 · Sport-Specific</div>
+    <h2>Tuần 5 — RTS Test + Social Half-Pace</h2>
+    <p class="week-meta">19 → 25/06 · Day 37–43 post-injury · Remodeling mature</p>
+    <p class="week-summary"><strong>RTS Test battery đầu tuần.</strong> Pass tất cả → social half-pace có brace từ Day 4. Fail ≥2 → lặp tuần 4, retest sau 1 tuần.</p>
+    <div class="progress-block">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="progress-text">0 / 0 bài tập hoàn thành</span>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+  <ol class="day-list">
+    <details class="day" data-date="2026-06-19">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 37 · RTS TEST</span>
+        <span class="day-title">Thứ 6 19/06 — RTS Test Battery + Lower Power</span>
+        <span class="day-duration">90'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <div class="callout">
+          <div class="callout-icon">🎯 RTS Test Battery — sáng</div>
+          <p>Pain ≤2/10 trong và 24h sau mỗi test. Tự tin ≥80%.</p>
+        </div>
+        <div class="day-subhead">RTS Test (5 tests)</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w5d1-rts1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg balance eyes closed — <strong>≥30s/bên, không loạng choạng</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d1-rts2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg hop distance — <strong>≥90% LSI</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d1-rts3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Side-hop test 30s qua line 30 cm — <strong>≥90% LSI</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d1-rts4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Figure-8 hop 6m×4m — <strong>hoàn thành không đau</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d1-rts5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">6-corner shadow 45s × 4 sets — <strong>form không suy giảm</strong></span></label></li>
+        </ul>
+        <div class="day-subhead">Lower Power Gym — tối</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w5d1-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Front squat 4×6 @ 75%</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d1-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Depth jump 3×6 từ box 30 cm</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d1-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">KB swing 4×10</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-20">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 38</span>
+        <span class="day-title">Thứ 7 20/06 — Upper Power</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w5d2-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bench 3×6</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d2-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Med ball slam 4×8</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d2-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Med ball rotational throw 3×8/bên</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d2-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pull-up 3×6</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d2-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Face pull 3×15</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d2-6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pallof rotational 3×8</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-21">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 39</span>
+        <span class="day-title">Chủ nhật 21/06 — Shadow full-pace + Agility</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w5d3-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Shadow badminton <strong>full-pace</strong> 4×45s on / 60s off</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d3-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Random partner-pointing 3×30s</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d3-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Cone cutting drill (5-10-5 pro agility, T-drill) 4 sets</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-22">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Recovery</span>
+        <span class="day-title">Thứ 2 22/06 — Active Recovery</span>
+        <span class="day-duration">40'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w5d4-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đi bộ + foam roll + giãn cơ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-23">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 41</span>
+        <span class="day-title">Thứ 3 23/06 — HIIT match-simulation (ĐEO BRACE)</span>
+        <span class="day-duration">55'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w5d5-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>15s shadow rally / 30s rest × 12 sets</strong> (3 blocks × 4 reps, nghỉ 2'/block) — đeo brace</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-24">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Rest</span>
+        <span class="day-title">Thứ 4 24/06 — Nghỉ</span>
+        <span class="day-duration">—</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w5d6-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Desk exercises + routine trước ngủ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-25">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 43 · SOCIAL</span>
+        <span class="day-title">Thứ 5 25/06 — SOCIAL HALF-PACE 75' (ĐEO BRACE)</span>
+        <span class="day-duration">75'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <div class="callout">
+          <div class="callout-icon">🏸 Return to social</div>
+          <p>Đây là buổi social đầu tiên — kỷ luật về load.</p>
+        </div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w5d7-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">KHÔNG jump smash full power</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d7-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">KHÔNG stretch lunge tới giới hạn</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w5d7-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Cool-down ice 10' lên ankle</span></label></li>
+        </ul>
+      </div>
+    </details>
+  </ol>
+</section>
+<section class="panel" id="panel-week-6">
+  <div class="week-intro">
+    <div class="week-eyebrow">Phase 3 · Sport-Specific</div>
+    <h2>Tuần 6 — Social Full-Pace</h2>
+    <p class="week-meta">26/06 → 02/07 · Day 44–50 post-injury · Remodeling complete</p>
+    <p class="week-summary">Tăng cường độ. Social full-pace từ giữa tuần nếu tuần 5 không tái phát triệu chứng.</p>
+    <div class="progress-block">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="progress-text">0 / 0 bài tập hoàn thành</span>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+  <ol class="day-list">
+    <details class="day" data-date="2026-06-26">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 44</span>
+        <span class="day-title">Thứ 6 26/06 — Lower Power Heavy</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w6d1-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Front squat 4×4–5 @ <strong>80%</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w6d1-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Depth jump 3×6 từ box 40 cm</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w6d1-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Single-leg lateral hop 3×8/bên</strong></span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-27">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 45</span>
+        <span class="day-title">Thứ 7 27/06 — Upper Power + Accessory</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w6d2-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bench 4×5</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w6d2-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pull-up 4×5</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w6d2-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Med ball throw + rotational throw 3×8</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w6d2-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Face pull + Rotator cuff + Wrist routine</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-28">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 46</span>
+        <span class="day-title">Chủ nhật 28/06 — Multi-shuttle drill + Agility</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w6d3-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Multi-shuttle drill</strong> (feed 40s liên tục / nghỉ 80s × 6 reps)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w6d3-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Agility: ladder + cone + 5-10-5</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-29">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Recovery</span>
+        <span class="day-title">Thứ 2 29/06 — Active Recovery</span>
+        <span class="day-duration">40'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w6d4-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đi bộ + foam roll + giãn cơ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-06-30">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 48</span>
+        <span class="day-title">Thứ 3 30/06 — HIIT progressive</span>
+        <span class="day-duration">55'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w6d5-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">HIIT 15s/30s × 14 sets (progressive)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w6d5-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Vai + wrist routine</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-01">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Rest</span>
+        <span class="day-title">Thứ 4 01/07 — Nghỉ</span>
+        <span class="day-duration">—</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w6d6-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Desk exercises + routine trước ngủ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-02">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 50 · SOCIAL</span>
+        <span class="day-title">Thứ 5 02/07 — SOCIAL FULL-PACE 90' (ĐEO BRACE)</span>
+        <span class="day-duration">90'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w6d7-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Social full-pace 90' với brace</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w6d7-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Cool-down ice 10' lên ankle</span></label></li>
+        </ul>
+      </div>
+    </details>
+  </ol>
+</section>
+<section class="panel" id="panel-week-7">
+  <div class="week-intro">
+    <div class="week-eyebrow">Phase 4 · Peak</div>
+    <h2>Tuần 7 — Peak Training</h2>
+    <p class="week-meta">03 → 09/07 · Day 51–57 post-injury · Tissue mature</p>
+    <p class="week-summary">3 buổi gym (A · B · C) + 2 buổi cầu social/match. Bắt đầu daily morning routine 5'.</p>
+    <div class="progress-block">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="progress-text">0 / 0 bài tập hoàn thành</span>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <div class="callout-icon">☀ Daily morning routine 5'</div>
+    <p>Mỗi ngày tuần này: single-leg balance eyes closed · single-leg calf raise · mini-hop forward-backward.</p>
+  </div>
+
+  <ol class="day-list">
+    <details class="day" data-date="2026-07-03">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 51 · GYM A</span>
+        <span class="day-title">Thứ 6 03/07 — Lower Power Peak</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w7d1-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5': balance + calf raise + mini-hop</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d1-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Front squat 4×3 @ <strong>85%</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d1-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Depth jump 4×5</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d1-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">KB swing 4×10</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d1-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg RDL 3×6</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-04">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 52 · GYM B</span>
+        <span class="day-title">Thứ 7 04/07 — Upper Power + Core</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w7d2-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d2-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bench 4×4</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d2-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>Weighted pull-up 4×5</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d2-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Med ball throw 4×6</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d2-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Med ball rotational throw 4×6</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d2-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pallof rotational 3×10</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-05">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 53 · SOCIAL</span>
+        <span class="day-title">Chủ nhật 05/07 — Social / Match (ĐEO BRACE)</span>
+        <span class="day-duration">90'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w7d3-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d3-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Social full-pace / match — brace bắt buộc</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-06">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Recovery</span>
+        <span class="day-title">Thứ 2 06/07 — Active Recovery</span>
+        <span class="day-duration">40'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w7d4-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d4-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đi bộ + foam roll + giãn cơ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-07">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 55 · GYM C</span>
+        <span class="day-title">Thứ 3 07/07 — Conditioning + Accessories</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w7d5-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d5-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text"><strong>HIIT 15s/30s × 12 sets</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d5-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Y-T-W + rotator cuff</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d5-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist routine</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d5-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg balance perturbation</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d5-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Agility ladder</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-08">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Rest</span>
+        <span class="day-title">Thứ 4 08/07 — Nghỉ</span>
+        <span class="day-duration">—</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w7d6-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d6-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Desk exercises + routine trước ngủ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-09">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 57 · MATCH</span>
+        <span class="day-title">Thứ 5 09/07 — Social / Match (ĐEO BRACE)</span>
+        <span class="day-duration">90'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w7d7-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w7d7-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Social / match đầy đủ</span></label></li>
+        </ul>
+      </div>
+    </details>
+  </ol>
+</section>
+<section class="panel" id="panel-week-8">
+  <div class="week-intro">
+    <div class="week-eyebrow">Phase 4 · Peak · Final</div>
+    <h2>Tuần 8 — Peak + Final Assessment</h2>
+    <p class="week-meta">10 → 16/07 · Day 58–64 post-injury · Tissue mature</p>
+    <p class="week-summary">Tuần cuối plan. <strong>Thứ 5 16/07: đánh giá lại toàn bộ tiêu chí định lượng</strong> — quyết định tiếp tục maintenance hay vào chu kỳ tập mới.</p>
+    <div class="progress-block">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span class="progress-text">0 / 0 bài tập hoàn thành</span>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <div class="callout-icon">☀ Daily morning routine 5'</div>
+    <p>Tiếp tục: balance eyes closed · single-leg calf raise · mini-hop forward-backward.</p>
+  </div>
+
+  <ol class="day-list">
+    <details class="day" data-date="2026-07-10">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 58 · GYM A</span>
+        <span class="day-title">Thứ 6 10/07 — Lower Power</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w8d1-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d1-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Front squat 4×3 @ 85%</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d1-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Depth jump 4×5</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d1-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">KB swing 4×10</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d1-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg RDL 3×6</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-11">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 59 · GYM B</span>
+        <span class="day-title">Thứ 7 11/07 — Upper Power + Core</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w8d2-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d2-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Bench 4×4</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d2-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Weighted pull-up 4×5</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d2-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Med ball throw 4×6</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d2-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Med ball rotational throw 4×6</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d2-5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pallof rotational 3×10</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-12">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 60 · SOCIAL</span>
+        <span class="day-title">Chủ nhật 12/07 — Social / Match</span>
+        <span class="day-duration">90'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w8d3-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d3-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Social full-pace / match — brace</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-13">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Recovery</span>
+        <span class="day-title">Thứ 2 13/07 — Active Recovery</span>
+        <span class="day-duration">40'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w8d4-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d4-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đi bộ + foam roll + giãn cơ</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-14">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 62 · GYM C</span>
+        <span class="day-title">Thứ 3 14/07 — Conditioning + Accessories</span>
+        <span class="day-duration">60'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w8d5-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d5-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">HIIT 15s/30s × 12 sets</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d5-2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Y-T-W + rotator cuff</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d5-3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Wrist routine + agility ladder</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d5-4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg balance perturbation</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-15">
+      <summary class="day-toggle">
+        <span class="day-tag rest">Rest</span>
+        <span class="day-title">Thứ 4 15/07 — Nghỉ trước assessment</span>
+        <span class="day-duration">—</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w8d6-m"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Morning 5'</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d6-1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Routine trước ngủ + chuẩn bị tinh thần assessment</span></label></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="day" data-date="2026-07-16">
+      <summary class="day-toggle">
+        <span class="day-tag">Day 64 · FINAL ASSESSMENT</span>
+        <span class="day-title">Thứ 5 16/07 — Final Assessment + Social</span>
+        <span class="day-duration">120'</span>
+        <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+      </summary>
+      <div class="day-body">
+        <div class="callout">
+          <div class="callout-icon">🏁 Mục tiêu định lượng cuối tuần 8</div>
+          <p>Đo lại tất cả tiêu chí — quyết định tiếp tục maintenance hay vào chu kỳ tập mới.</p>
+        </div>
+        <div class="day-subhead">Final Test Battery</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-t1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg balance eyes closed: <strong>≥45s</strong> (bên đau như bên lành)</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-t2"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Single-leg hop distance: <strong>≥95% LSI</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-t3"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">6-corner shadow: <strong>4 vòng × 30s nghỉ 30s</strong> không suy giảm</span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-t4"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Goblet squat: <strong>1.0–1.2 × BW × 8 reps</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-t5"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Push-up: <strong>25–30 strict</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-t6"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Pull-up / Inverted row: <strong>8–10 strict</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-t7"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Plank: <strong>90s</strong></span></label></li>
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-t8"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Đánh social 90' — không đau cổ chân/gối, ít mỏi vai/cổ tay</span></label></li>
+        </ul>
+        <div class="day-subhead">Celebrate 🎉</div>
+        <ul class="ex-list">
+          <li><label class="ex"><input type="checkbox" data-id="w8d7-c1"><span class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span class="ex-text">Plan 8 tuần hoàn thành — đi ăn món yêu thích, nghỉ ngơi xứng đáng</span></label></li>
+        </ul>
+      </div>
+    </details>
+  </ol>
+</section>
+
+</main>
+
+<!-- ============ FAB BAR ============ -->
+<div class="fab-bar">
+  <button class="fab" id="btn-export" title="Sao chép link tiến độ">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 14a4 4 0 0 1 0-5.6l3-3a4 4 0 0 1 5.6 5.6L17 12.5"/><path d="M14 10a4 4 0 0 1 0 5.6l-3 3a4 4 0 0 1-5.6-5.6L7 11.5"/></svg>
+    <span class="fab-label-long">Copy link</span>
+  </button>
+  <button class="fab" id="btn-reset" title="Reset tiến độ">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+    <span class="fab-label-long">Reset</span>
+  </button>
+  <button class="fab primary" id="btn-today" title="Đi đến hôm nay">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+    <span class="fab-label-long">Hôm nay</span>
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer class="page-footer">
+  <div>Kế hoạch phục hồi 8 tuần · ATFL Grade 1 + Cầu lông</div>
+  <div class="src">ke_hoach_tap_luyen_8tuan_ATFL_Grade1.md</div>
+</footer>
+
+<script>
+/* ============ STATE & CONSTANTS ============ */
+const PLAN_START = new Date('2026-05-22T00:00:00');
+const PLAN_END   = new Date('2026-07-16T23:59:59');
+const INJURY_DATE = new Date('2026-05-13T00:00:00');
+const TODAY = new Date();
+const STATE_KEY = 'tp-checked-v1';
+
+const WEEK_RANGES = [
+  {w:1, start:'2026-05-22', end:'2026-05-28'},
+  {w:2, start:'2026-05-29', end:'2026-06-04'},
+  {w:3, start:'2026-06-05', end:'2026-06-11'},
+  {w:4, start:'2026-06-12', end:'2026-06-18'},
+  {w:5, start:'2026-06-19', end:'2026-06-25'},
+  {w:6, start:'2026-06-26', end:'2026-07-02'},
+  {w:7, start:'2026-07-03', end:'2026-07-09'},
+  {w:8, start:'2026-07-10', end:'2026-07-16'},
+];
+
+function dateStr(d){return d.toISOString().slice(0,10)}
+function daysBetween(a,b){return Math.floor((b-a)/(1000*60*60*24))}
+function currentWeek(){
+  const t=dateStr(TODAY);
+  for(const r of WEEK_RANGES){if(t>=r.start&&t<=r.end)return r.w}
+  return null;
+}
+
+/* ============ HERO STATS ============ */
+function updateHeroStats(){
+  const total = daysBetween(PLAN_START,PLAN_END);
+  const done = Math.max(0,daysBetween(PLAN_START,TODAY));
+  const left = Math.max(0,daysBetween(TODAY,PLAN_END));
+  const postDay = Math.max(0,daysBetween(INJURY_DATE,TODAY));
+  const pct = Math.min(100,Math.max(0,Math.round((done/total)*100)));
+  const cw = currentWeek();
+  document.getElementById('kpi-days').textContent = left;
+  document.getElementById('kpi-week').textContent = cw ? cw + '/8' : (TODAY<PLAN_START?'PRE':'DONE');
+  document.getElementById('kpi-postday').textContent = postDay;
+  document.getElementById('kpi-pct').textContent = pct + '%';
+  if(cw){
+    document.querySelectorAll('.phase').forEach(p=>{
+      const weeks=p.dataset.weeks.split(',').map(Number);
+      if(weeks.includes(cw)) p.classList.add('current');
+    });
+  }
+}
+
+/* ============ TABS ============ */
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+function activateTab(tabId){
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===tabId));
+  panels.forEach(p=>p.classList.toggle('active',p.id==='panel-'+tabId));
+  document.body.dataset.activeWeek = tabId==='overview' ? 'overview' : tabId.replace('week-','');
+  window.scrollTo({top:document.querySelector('.tabs-wrap').offsetTop-20,behavior:'smooth'});
+  setTimeout(runReveal,50);
+}
+tabs.forEach(t=>t.addEventListener('click',()=>activateTab(t.dataset.tab)));
+
+/* ============ CHECKBOX STATE ============ */
+function loadState(){
+  try{return JSON.parse(localStorage.getItem(STATE_KEY)||'{}')}catch(e){return {}}
+}
+function saveState(s){
+  localStorage.setItem(STATE_KEY,JSON.stringify(s));
+}
+let STATE = loadState();
+
+function restoreCheckboxes(){
+  document.querySelectorAll('.ex input[type="checkbox"]').forEach(cb=>{
+    if(STATE[cb.dataset.id]) cb.checked = true;
+  });
+  updateAllProgress();
+}
+function onCheckboxChange(e){
+  const cb = e.target;
+  if(cb.checked) STATE[cb.dataset.id] = 1;
+  else delete STATE[cb.dataset.id];
+  saveState(STATE);
+  updateProgressForWeek(cb.closest('.panel').id.replace('panel-week-',''));
+}
+function attachCheckboxHandlers(){
+  document.querySelectorAll('.ex input[type="checkbox"]').forEach(cb=>{
+    cb.addEventListener('change',onCheckboxChange);
+  });
+}
+
+function updateProgressForWeek(w){
+  const panel = document.getElementById('panel-week-'+w);
+  if(!panel) return;
+  const boxes = panel.querySelectorAll('.ex input[type="checkbox"]');
+  const checked = panel.querySelectorAll('.ex input[type="checkbox"]:checked').length;
+  const total = boxes.length;
+  const pct = total ? Math.round((checked/total)*100) : 0;
+  const fill = panel.querySelector('.progress-fill');
+  const txt = panel.querySelector('.progress-text');
+  const pctEl = panel.querySelector('.progress-percent');
+  if(fill) fill.style.width = pct + '%';
+  if(txt) txt.textContent = `${checked} / ${total} bài tập hoàn thành`;
+  if(pctEl) pctEl.textContent = pct + '%';
+}
+function updateAllProgress(){
+  for(let w=1;w<=8;w++) updateProgressForWeek(w);
+}
+
+/* ============ DAY AUTO-EXPAND ============ */
+function autoExpandToday(){
+  const today = dateStr(TODAY);
+  document.querySelectorAll('.day').forEach(d=>{
+    if(d.dataset.date === today) d.open = true;
+  });
+}
+function goToToday(){
+  const cw = currentWeek();
+  if(cw){
+    activateTab('week-'+cw);
+    setTimeout(()=>{
+      const today = dateStr(TODAY);
+      const targetDay = document.querySelector(`.day[data-date="${today}"]`);
+      if(targetDay){
+        targetDay.open = true;
+        targetDay.scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    },200);
+  } else {
+    showToast(TODAY<PLAN_START?'Plan chưa bắt đầu':'Plan đã kết thúc');
+  }
+}
+
+/* ============ URL EXPORT / IMPORT ============ */
+function exportState(){
+  const ids = Object.keys(STATE).sort();
+  if(!ids.length){showToast('Chưa có check nào để chia sẻ');return}
+  const compact = ids.join(',');
+  const enc = btoa(unescape(encodeURIComponent(compact)));
+  const url = location.origin + location.pathname + '#s=' + enc;
+  navigator.clipboard.writeText(url).then(()=>{
+    showToast('Đã copy link! Paste trên thiết bị khác để sync.');
+  }).catch(()=>{
+    prompt('Copy link:',url);
+  });
+}
+function importFromUrl(){
+  const h = location.hash;
+  if(!h.startsWith('#s=')) return;
+  try{
+    const dec = decodeURIComponent(escape(atob(h.slice(3))));
+    const ids = dec.split(',').filter(Boolean);
+    STATE = {};
+    ids.forEach(id=>STATE[id]=1);
+    saveState(STATE);
+    showToast('Đã import ' + ids.length + ' bài tập từ link');
+    location.hash='';
+  }catch(e){showToast('Link không hợp lệ')}
+}
+function resetState(){
+  if(!confirm('Reset toàn bộ tiến độ?')) return;
+  STATE = {};
+  saveState(STATE);
+  document.querySelectorAll('.ex input[type="checkbox"]').forEach(cb=>cb.checked=false);
+  updateAllProgress();
+  showToast('Đã reset tiến độ');
+}
+
+/* ============ TOAST ============ */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+/* ============ REVEAL ON SCROLL ============ */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.08});
+function runReveal(){
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>observer.observe(el));
+}
+
+/* ============ BOOT ============ */
+document.getElementById('btn-export').addEventListener('click',exportState);
+document.getElementById('btn-reset').addEventListener('click',resetState);
+document.getElementById('btn-today').addEventListener('click',goToToday);
+
+function init(){
+  updateHeroStats();
+  importFromUrl();
+  attachCheckboxHandlers();
+  restoreCheckboxes();
+  autoExpandToday();
+  // Mark all panel children as reveal for scroll-in animation
+  document.querySelectorAll('.panel > *').forEach(el=>{
+    if(!el.classList.contains('reveal')) el.classList.add('reveal');
+  });
+  // Auto-jump to current week tab if today is in plan range
+  const cw = currentWeek();
+  if(cw){
+    tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab==='week-'+cw));
+    panels.forEach(p=>p.classList.toggle('active', p.id==='panel-week-'+cw));
+    document.body.dataset.activeWeek = String(cw);
+  }
+  runReveal();
+}
+document.addEventListener('DOMContentLoaded', init);
+if(document.readyState !== 'loading') init();
+</script>
+
+</body>
 </html>
